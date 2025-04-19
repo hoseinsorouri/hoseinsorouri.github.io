@@ -91,380 +91,606 @@
         .pdp-default {
             z-index: 9999;
         }
+        /* دکمه گرد */
+        .theme-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #206bc4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        /* منوی کشویی */
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            display: none;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
     <div class="page ir">
         <div>
 
-            <button id="toggle-theme" class="btn btn-secondary">
-                <i class="ti ti-sun"></i> حالت تیره
+            <button id="themeToggle" class="theme-toggle">
+                <i class="ti ti-sun"></i>
             </button>
-        </div>
-        <div class="form-container">
-            <h1 class="form-title">
-                <i class="ti ti-clipboard-text"></i> فرم اطلاعات شخصی بدنسازی
-            </h1>
-
-            <form id="personalForm">
-                <!-- اطلاعات پایه -->
-                <div class="form-section bg-info-lt">
-                    <h3 class="section-title">
-                        <i class="ti ti-user"></i> اطلاعات شخصی
-                    </h3>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">نام</label>
-                            <input type="text" class="form-control" id="firstName" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">نام خانوادگی</label>
-                            <input type="text" class="form-control" id="lastName" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">تاریخ تولد</label>
-                            <input type="text" class="form-control" id="birthDate" required readonly>
-                            <div class="mt-1 small text-muted" id="calculatedAge"></div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">شماره تلفن همراه</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="09123456789"
-                            pattern="09[0-9]{9}" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">جنسیت</label>
-                            <select class="form-select" id="gender" required>
-                                <option value="" selected disabled>انتخاب کنید</option>
-                                <option value="male">مرد</option>
-                                <option value="female">زن</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">وزن (کیلوگرم)</label>
-                            <input type="number" class="form-control" id="weight" min="30" max="300" maxlength="3" step="0.1" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">قد (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="height" min="100" max="250" maxlength="3"required>
-                        </div>
-                    </div>
+            <div id="themeDropdown" class="dropdown-menu">
+                <div class="dropdown-item" data-theme="light">
+                    <i class="ti ti-sun"></i> حالت روشن
                 </div>
-
-                <!-- اندازه‌گیری‌ها -->
-                <div class="form-section bg-info-lt">
-                    <h3 class="section-title">
-                        <i class="ti ti-measure"></i> اندازه‌گیری‌های بدنی
-                    </h3>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">دور ران (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="thigh" min="1" max="200" maxlength="3" step="0.1" required>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">دور شکم (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="abdomen" min="1" max="200" maxlength="3" step="0.1" required>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">دور باسن (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="hip" min="1" max="200" maxlength="3" step="0.1" required>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">دور سینه (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="chest" min="1" max="200" maxlength="3" step="0.1" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">دور بازو (سانتی‌متر)</label>
-                            <input type="number" class="form-control" id="arm" min="1" max="200" maxlength="3" step="0.1" required>
-                        </div>
-                    </div>
+                <div class="dropdown-item" data-theme="dark">
+                    <i class="ti ti-moon"></i> حالت تاریک
                 </div>
-
-                <!-- سوالات بله/خیر -->
-                <div class="form-section bg-info-lt">
-                    <h3 class="section-title">
-                        <i class="ti ti-question-mark"></i> سوالات سلامت
-                    </h3>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="q1">
-                            <span class="form-check-label">آیا سابقه بیماری قلبی دارید؟</span>
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="q2">
-                            <span class="form-check-label">آیا سیگار مصرف می‌کنید؟</span>
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="q3">
-                            <span class="form-check-label">آیا به طور منظم ورزش می‌کنید؟</span>
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="q4">
-                            <span class="form-check-label">آیا رژیم غذایی خاصی دارید؟</span>
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="q5">
-                            <span class="form-check-label">آیا داروی خاصی مصرف می‌کنید؟</span>
-                        </label>
-                    </div>
+                <div class="dropdown-item" data-theme="system">
+                    <i class="ti ti-device-laptop"></i> حالت دستگاه
                 </div>
+            </div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card">
+                            <div class="card-body p-4 p-md-5">
+                                <!-- Header Section -->
+                                <div class="text-center mb-4">
+                                    <h1 class="h2">حسین ادریس سروری</h1>
+                                    <div class="text-muted">
+                                        متخصص علوم ورزشی و مربی بدنسازی
+                                    </div>
+                                </div>
 
-                <!-- سوالات مکمل‌های بدنسازی -->
-                <div class="form-section bg-info-lt">
-                    <h3 class="section-title">
-                        <i class="ti ti-pill"></i> مکمل‌های بدنسازی
-                    </h3>
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="supplement1">
-                            <span class="form-check-label">آیا تاکنون از مکمل‌های بدنسازی استفاده کرده‌اید؟</span>
-                        </label>
-                    </div>
-                    <div class="supplement-details mb-3" style="display: none;">
-                        <div class="mb-3">
-                            <label class="form-label">چه نوع مکمل‌هایی استفاده کرده‌اید؟</label>
-                            <div class="row g-2">
-                                <div class="col-md-3">
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="supplementType" value="protein">
-                                        <span class="form-check-label">پروتئین</span>
-                                    </label>
+                                <!-- Qualifications Section -->
+                                <div class="mb-4">
+                                    <h2 class="h4 mb-3">
+                                        <i class="icon icon-tabler-award me-2"></i>
+                                        مدارک و سوابق تخصصی
+                                    </h2>
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item">
+                                            <i class="icon icon-tabler-school me-2"></i>
+                                            کارشناس رشته علوم ورزشی
+                                        </div>
+                                        <div class="list-group-item">
+                                            <i class="icon icon-tabler-certificate me-2"></i>
+                                            مربی درجه ۲ فدراسیون بدنسازی ایران
+                                        </div>
+                                        <div class="list-group-item">
+                                            <i class="icon icon-tabler-badge me-2"></i>
+                                            عضو رسمی فدراسیون بدنسازی و پرورش اندام ایران
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="supplementType" value="creatine">
-                                        <span class="form-check-label">کراتین</span>
-                                    </label>
+
+                                <!-- Certificates Section -->
+                                <div class="mb-4">
+                                    <h2 class="h4 mb-3">
+                                        <i class="icon icon-tabler-certificate-2 me-2"></i>
+                                        مدارک تخصصی
+                                    </h2>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="card card-sm bg-primary-lt">
+                                                <div class="card-body">
+                                                    <i class="icon icon-tabler-stretching me-2"></i>
+                                                    حرکات اصلاحی و آسیب‌شناسی ورزشی
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card card-sm bg-blue-lt">
+                                                <div class="card-body">
+                                                    <i class="icon icon-tabler-run me-2"></i>
+                                                    طراحی برنامه‌های فیتنس و تناسب اندام
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card card-sm bg-purple-lt">
+                                                <div class="card-body">
+                                                    <i class="icon icon-tabler-muscle me-2"></i>
+                                                    طراحی برنامه‌های بدنسازی تخصصی
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card card-sm bg-green-lt">
+                                                <div class="card-body">
+                                                    <i class="icon icon-tabler-leaf me-2"></i>
+                                                    مشاور تغذیه ورزشی
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="supplementType" value="bcaa">
-                                        <span class="form-check-label">BCAA</span>
-                                    </label>
+
+                                <!-- Work Style Section -->
+                                <div class="mb-4">
+                                    <h2 class="h4 mb-3">
+                                        <i class="icon icon-tabler-chart-dots-3 me-2"></i>
+                                        سبک کاری
+                                    </h2>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="me-3 text-primary">
+                                                            <i class="icon icon-tabler-book-2" style="font-size: 2rem;"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="h5">علمی + کاربردی</h3>
+                                                            <p class="text-muted mb-0">
+                                                                ترکیب دانش آکادمیک با تجربه عملی
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="me-3 text-blue">
+                                                            <i class="icon icon-tabler-user-circle" style="font-size: 2rem;"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="h5">برنامه‌ریزی شخصی‌سازی شده</h3>
+                                                            <p class="text-muted mb-0">
+                                                                بر اساس ارزیابی فیزیکی و اهداف ورزشکار
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="supplementType" value="other">
-                                        <span class="form-check-label">سایر</span>
-                                    </label>
+
+                                <!-- Additional Info -->
+                                <div class="alert alert-info">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="icon icon-tabler-info-circle"></i>
+                                        </div>
+                                        <div>
+                                            در صورت نیاز به اطلاعات بیشتر یا مشاهده گواهی‌ها، خوشحال می‌شوم در اختیارتان قرار دهم.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mb-3" id="otherSupplementDiv" style="display: none;">
-                            <label class="form-label">توضیح دهید:</label>
-                            <textarea class="form-control" id="otherSupplement" rows="2"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="wantSupplementInfo">
-                            <span class="form-check-label">آیا مایل به دریافت اطلاعات درباره مکمل‌های مناسب هستید؟</span>
-                        </label>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="wantToPurchase">
-                            <span class="form-check-label">آیا قصد خرید مکمل دارید؟</span>
-                        </label>
-                    </div>
-
-                    <div class="purchase-details mb-3" style="display: none;">
-                        <div class="mb-3">
-                            <label class="form-label">بودجه شما برای خرید مکمل چقدر است؟</label>
-                            <select class="form-select" id="budget">
-                                <option value="" selected disabled>انتخاب کنید</option>
-                                <option value="low">کمتر از ۵۰۰ هزار تومان</option>
-                                <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
-                                <option value="high">۱ تا ۲ میلیون تومان</option>
-                                <option value="veryHigh">بیش از ۲ میلیون تومان</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">هدف شما از مصرف مکمل چیست؟</label>
-                            <select class="form-select" id="goal">
-                                <option value="" selected disabled>انتخاب کنید</option>
-                                <option value="muscleGain">افزایش حجم عضلانی</option>
-                                <option value="fatLoss">چربی سوزی</option>
-                                <option value="recovery">ریکاوری بهتر</option>
-                                <option value="performance">بهبود عملکرد</option>
-                                <option value="health">سلامت عمومی</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="form-container">
+                <h1 class="form-title">
+                    <i class="ti ti-clipboard-text"></i> فرم اطلاعات شخصی بدنسازی
+                </h1>
 
-                <!-- دکمه‌های ارتباطی -->
-                <div class="contact-buttons">
-                    <a href="#" class="contact-btn btn-telegram" id="telegramBtn">
-                        <i class="ti ti-brand-telegram"></i>
-                        ارتباط با تلگرام
-                    </a>
-                    <a href="#" class="contact-btn btn-whatsapp" id="whatsappBtn">
-                        <i class="ti ti-brand-whatsapp"></i>
-                        ارتباط با واتساپ
-                    </a>
-                </div>
+                <form id="personalForm">
+                    <!-- اطلاعات پایه -->
+                    <div class="form-section bg-info-lt">
+                        <h3 class="section-title">
+                            <i class="ti ti-user"></i> اطلاعات شخصی
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">نام</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">نام خانوادگی</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">تاریخ تولد</label>
+                                <input type="text" class="form-control" id="birthDate" required readonly>
+                                <div class="mt-1 small text-muted" id="calculatedAge"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">شماره تلفن همراه</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="09123456789"
+                                pattern="09[0-9]{9}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">جنسیت</label>
+                                <select class="form-select" id="gender" required>
+                                    <option value="" selected disabled>انتخاب کنید</option>
+                                    <option value="male">مرد</option>
+                                    <option value="female">زن</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">وزن (کیلوگرم)</label>
+                                <input type="number" class="form-control" id="weight" min="30" max="300" maxlength="3" step="0.1" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">قد (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="height" min="100" max="250" maxlength="3"required>
+                            </div>
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn btn-primary btn-submit">
-                    <i class="ti ti-send"></i> ارسال اطلاعات
-                </button>
-            </form>
+                    <!-- اندازه‌گیری‌ها -->
+                    <div class="form-section bg-info-lt">
+                        <h3 class="section-title">
+                            <i class="ti ti-measure"></i> اندازه‌گیری‌های بدنی
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">دور ران (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="thigh" min="1" max="200" maxlength="3" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">دور شکم (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="abdomen" min="1" max="200" maxlength="3" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">دور باسن (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="hip" min="1" max="200" maxlength="3" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">دور سینه (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="chest" min="1" max="200" maxlength="3" step="0.1" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">دور بازو (سانتی‌متر)</label>
+                                <input type="number" class="form-control" id="arm" min="1" max="200" maxlength="3" step="0.1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- سوالات بله/خیر -->
+                    <div class="form-section bg-info-lt">
+                        <h3 class="section-title">
+                            <i class="ti ti-question-mark"></i> سوالات سلامت
+                        </h3>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="q1">
+                                <span class="form-check-label">آیا سابقه بیماری قلبی دارید؟</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="q2">
+                                <span class="form-check-label">آیا سیگار مصرف می‌کنید؟</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="q3">
+                                <span class="form-check-label">آیا به طور منظم ورزش می‌کنید؟</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="q4">
+                                <span class="form-check-label">آیا رژیم غذایی خاصی دارید؟</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="q5">
+                                <span class="form-check-label">آیا داروی خاصی مصرف می‌کنید؟</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- سوالات مکمل‌های بدنسازی -->
+                    <div class="form-section bg-info-lt">
+                        <h3 class="section-title">
+                            <i class="ti ti-pill"></i> مکمل‌های بدنسازی
+                        </h3>
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="supplement1">
+                                <span class="form-check-label">آیا تاکنون از مکمل‌های بدنسازی استفاده کرده‌اید؟</span>
+                            </label>
+                        </div>
+                        <div class="supplement-details mb-3" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">چه نوع مکمل‌هایی استفاده کرده‌اید؟</label>
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="supplementType" value="protein">
+                                            <span class="form-check-label">پروتئین</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="supplementType" value="creatine">
+                                            <span class="form-check-label">کراتین</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="supplementType" value="bcaa">
+                                            <span class="form-check-label">BCAA</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="supplementType" value="other">
+                                            <span class="form-check-label">سایر</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="otherSupplementDiv" style="display: none;">
+                                <label class="form-label">توضیح دهید:</label>
+                                <textarea class="form-control" id="otherSupplement" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="wantSupplementInfo">
+                                <span class="form-check-label">آیا مایل به دریافت اطلاعات درباره مکمل‌های مناسب هستید؟</span>
+                            </label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="wantToPurchase">
+                                <span class="form-check-label">آیا قصد خرید مکمل دارید؟</span>
+                            </label>
+                        </div>
+
+                        <div class="purchase-details mb-3" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">بودجه شما برای خرید مکمل چقدر است؟</label>
+                                <select class="form-select" id="budget">
+                                    <option value="" selected disabled>انتخاب کنید</option>
+                                    <option value="low">کمتر از ۵۰۰ هزار تومان</option>
+                                    <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
+                                    <option value="high">۱ تا ۲ میلیون تومان</option>
+                                    <option value="veryHigh">بیش از ۲ میلیون تومان</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">هدف شما از مصرف مکمل چیست؟</label>
+                                <select class="form-select" id="goal">
+                                    <option value="" selected disabled>انتخاب کنید</option>
+                                    <option value="muscleGain">افزایش حجم عضلانی</option>
+                                    <option value="fatLoss">چربی سوزی</option>
+                                    <option value="recovery">ریکاوری بهتر</option>
+                                    <option value="performance">بهبود عملکرد</option>
+                                    <option value="health">سلامت عمومی</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="description">
+                        <label class="form-label">توضیح دهید:</label>
+                        <textarea class="form-control" id="ddoso" rows="2"></textarea>
+                    </div>
+                    <!-- دکمه‌های ارتباطی -->
+                    <div class="contact-buttons">
+                        <a href="#" class="contact-btn btn-telegram" id="telegramBtn">
+                            <i class="ti ti-brand-telegram"></i>
+                            ارتباط با تلگرام
+                        </a>
+                        <a href="#" class="contact-btn btn-whatsapp" id="whatsappBtn">
+                            <i class="ti ti-brand-whatsapp"></i>
+                            ارتباط با واتساپ
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="ti ti-send"></i> ارسال اطلاعات
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <script>
-        $(document).ready(function() {
-            // Persian Date Picker
-            $('#birthDate').persianDatepicker({
-                format: 'YYYY/MM/DD',
-                maxDate: new persianDate().add('year', 0).valueOf(),
-                onSelect: function(unix) {
-                    calculateAge(unix);
-                }
-            });
-            // تغییر مد (دارک/لایت)
-            $("#toggle-theme").click(function() {
-                let currentTheme = $("html").attr("data-bs-theme");
-                if (currentTheme === "light") {
-                    $("html").attr("data-bs-theme", "dark");
-                    $("#toggle-theme").html('<i class="ti ti-moon"></i> حالت روشن');
-                } else {
-                    $("html").attr("data-bs-theme", "light");
-                    $("#toggle-theme").html('<i class="ti ti-sun"></i> حالت تیره');
-                }
-            });
-            // محاسبه سن بر اساس تاریخ تولد
-            function calculateAge(timestamp) {
-                const birthDate = new persianDate(timestamp);
-                const today = new persianDate();
-
-                let age = today.year() - birthDate.year();
-
-                // اگر هنوز تاریخ تولد امسال نرسیده باشد، یک سال کم می‌کنیم
-                if (today.month() < birthDate.month() ||
-                    (today.month() === birthDate.month() && today.date() < birthDate.date())) {
-                    age--;
-                }
-
-                $('#calculatedAge').text(`سن: ${age} سال`);
-            }
-
-            // نمایش/مخفی کردن جزئیات مکمل
-            $('#supplement1').change(function() {
-                if (this.checked) {
-                    $('.supplement-details').slideDown();
-                } else {
-                    $('.supplement-details').slideUp();
-                }
-            });
-
-            // نمایش/مخفی کردن فیلد توضیحات مکمل
-            $('input[name="supplementType"]').change(function() {
-                if ($('input[name="supplementType"][value="other"]').is(':checked')) {
-                    $('#otherSupplementDiv').slideDown();
-                } else {
-                    $('#otherSupplementDiv').slideUp();
-                }
-            });
-
-            // نمایش/مخفی کردن جزئیات خرید
-            $('#wantToPurchase').change(function() {
-                if (this.checked) {
-                    $('.purchase-details').slideDown();
-                } else {
-                    $('.purchase-details').slideUp();
-                }
-            });
-
-            // تنظیم دکمه‌های ارتباطی
-            $('#telegramBtn').click(function(e) {
-                e.preventDefault();
-                const phone = $('#phone').val();
-                if (phone) {
-                    window.open(`https://t.me/+${phone.substring(1)}`, '_blank');
-                } else {
-                    alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
-                }
-            });
-
-            $('#whatsappBtn').click(function(e) {
-                e.preventDefault();
-                const phone = $('#phone').val();
-                if (phone) {
-                    window.open(`https://wa.me/98${phone.substring(1)}`, '_blank');
-                } else {
-                    alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
-                }
-            });
-
-            // ارسال فرم
-            $('#personalForm').on('submit',
-                function(e) {
-                    e.preventDefault();
-
-                    // جمع‌آوری داده‌ها
-                    const formData = {
-                        personalInfo: {
-                            firstName: $('#firstName').val(),
-                            lastName: $('#lastName').val(),
-                            birthDate: $('#birthDate').val(),
-                            phone: $('#phone').val(),
-                            gender: $('#gender').val(),
-                            weight: $('#weight').val(),
-                            height: $('#height').val()
-                        },
-                        measurements: {
-                            thigh: $('#thigh').val(),
-                            waist: $('#waist').val(),
-                            hip: $('#hip').val(),
-                            chest: $('#chest').val()
-                        },
-                        healthQuestions: {
-                            q1: $('#q1').is(':checked'),
-                            q2: $('#q2').is(':checked'),
-                            q3: $('#q3').is(':checked'),
-                            q4: $('#q4').is(':checked'),
-                            q5: $('#q5').is(':checked')
-                        },
-                        supplements: {
-                            usedBefore: $('#supplement1').is(':checked'),
-                            types: $('input[name="supplementType"]:checked').map(function() {
-                                return $(this).val();
-                            }).get(),
-                            otherSupplements: $('#otherSupplement').val(),
-                            wantInfo: $('#wantSupplementInfo').is(':checked'),
-                            wantToPurchase: $('#wantToPurchase').is(':checked'),
-                            budget: $('#budget').val(),
-                            goal: $('#goal').val()
-                        }
-                    };
-
-                    // در اینجا می‌توانید داده‌ها را به سرور ارسال کنید
-                    console.log('Form Data:', formData);
-
-                    // نمایش پیام موفقیت
-                    alert('اطلاعات با موفقیت ثبت شد!');
-
-                    // ریست فرم (اختیاری)
-                    // this.reset();
+        <script>
+            $(document).ready(function() {
+                // Persian Date Picker
+                $('#birthDate').persianDatepicker({
+                    format: 'YYYY/MM/DD',
+                    maxDate: new persianDate().add('year', 0).valueOf(),
+                    onSelect: function(unix) {
+                        calculateAge(unix);
+                    }
                 });
-        });
-    </script>
-</body>
+                const themeToggle = $("#themeToggle");
+                const themeDropdown = $("#themeDropdown");
+
+                // بارگذاری تم از حافظه مرورگر
+                const savedTheme = localStorage.getItem("theme") || "system";
+                applyTheme(savedTheme);
+
+                // نمایش/مخفی کردن منوی کشویی
+                themeToggle.click(function () {
+                    themeDropdown.toggleClass("show");
+                });
+
+                // تغییر تم
+                $(".dropdown-item").click(function () {
+                    const selectedTheme = $(this).data("theme");
+                    applyTheme(selectedTheme);
+                    localStorage.setItem("theme", selectedTheme); // ذخیره در حافظه مرورگر
+                    themeDropdown.removeClass("show");
+                });
+
+                // اعمال تم
+                function applyTheme(theme) {
+                    if (theme === "light") {
+                        $("html").attr("data-bs-theme", "light");
+                        themeToggle.html('<i class="ti ti-sun"></i>');
+                    } else if (theme === "dark") {
+                        $("html").attr("data-bs-theme", "dark");
+                        themeToggle.html('<i class="ti ti-moon"></i>');
+                    } else {
+                        // حالت دستگاه (سیستم)
+                        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                        $("html").attr("data-bs-theme", prefersDark ? "dark": "light");
+                        themeToggle.html('<i class="ti ti-device-laptop"></i>');
+                    }
+                }
+
+                // بستن منوی کشویی هنگام کلیک خارج از آن
+                $(document).click(function (e) {
+                    if (!themeToggle.is(e.target) && themeDropdown.has(e.target).length === 0) {
+                        themeDropdown.removeClass("show");
+                    }
+                });
+
+
+                // محاسبه سن بر اساس تاریخ تولد
+                function calculateAge(timestamp) {
+                    const birthDate = new persianDate(timestamp);
+                    const today = new persianDate();
+
+                    let age = today.year() - birthDate.year();
+
+                    // اگر هنوز تاریخ تولد امسال نرسیده باشد، یک سال کم می‌کنیم
+                    if (today.month() < birthDate.month() ||
+                        (today.month() === birthDate.month() && today.date() < birthDate.date())) {
+                        age--;
+                    }
+
+                    $('#calculatedAge').text(`سن: ${age} سال`);
+                }
+
+                // نمایش/مخفی کردن جزئیات مکمل
+                $('#supplement1').change(function() {
+                    if (this.checked) {
+                        $('.supplement-details').slideDown();
+                    } else {
+                        $('.supplement-details').slideUp();
+                    }
+                });
+
+                // نمایش/مخفی کردن فیلد توضیحات مکمل
+                $('input[name="supplementType"]').change(function() {
+                    if ($('input[name="supplementType"][value="other"]').is(':checked')) {
+                        $('#otherSupplementDiv').slideDown();
+                    } else {
+                        $('#otherSupplementDiv').slideUp();
+                    }
+                });
+
+                // نمایش/مخفی کردن جزئیات خرید
+                $('#wantToPurchase').change(function() {
+                    if (this.checked) {
+                        $('.purchase-details').slideDown();
+                    } else {
+                        $('.purchase-details').slideUp();
+                    }
+                });
+
+                // تنظیم دکمه‌های ارتباطی
+                $('#telegramBtn').click(function(e) {
+                    e.preventDefault();
+                    const phone = $('#phone').val();
+                    if (phone) {
+                        window.open(`https://t.me/+${phone.substring(1)}`, '_blank');
+                    } else {
+                        alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
+                    }
+                });
+
+                $('#whatsappBtn').click(function(e) {
+                    e.preventDefault();
+                    const phone = $('#phone').val();
+                    if (phone) {
+                        window.open(`https://wa.me/98${phone.substring(1)}`, '_blank');
+                    } else {
+                        alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
+                    }
+                });
+
+                // ارسال فرم
+                $('#personalForm').on('submit',
+                    function(e) {
+                        e.preventDefault();
+
+                        // جمع‌آوری داده‌ها
+                        const formData = {
+                            personalInfo: {
+                                firstName: $('#firstName').val(),
+                                lastName: $('#lastName').val(),
+                                birthDate: $('#birthDate').val(),
+                                phone: $('#phone').val(),
+                                gender: $('#gender').val(),
+                                weight: $('#weight').val(),
+                                height: $('#height').val()
+                            },
+                            measurements: {
+                                thigh: $('#thigh').val(),
+                                waist: $('#waist').val(),
+                                hip: $('#hip').val(),
+                                chest: $('#chest').val()
+                            },
+                            healthQuestions: {
+                                q1: $('#q1').is(':checked'),
+                                q2: $('#q2').is(':checked'),
+                                q3: $('#q3').is(':checked'),
+                                q4: $('#q4').is(':checked'),
+                                q5: $('#q5').is(':checked')
+                            },
+                            supplements: {
+                                usedBefore: $('#supplement1').is(':checked'),
+                                types: $('input[name="supplementType"]:checked').map(function() {
+                                    return $(this).val();
+                                }).get(),
+                                otherSupplements: $('#otherSupplement').val(),
+                                wantInfo: $('#wantSupplementInfo').is(':checked'),
+                                wantToPurchase: $('#wantToPurchase').is(':checked'),
+                                budget: $('#budget').val(),
+                                goal: $('#goal').val()
+                            }
+                        };
+
+                        // در اینجا می‌توانید داده‌ها را به سرور ارسال کنید
+                        console.log('Form Data:', formData);
+
+                        // نمایش پیام موفقیت
+                        alert('اطلاعات با موفقیت ثبت شد!');
+
+                        // ریست فرم (اختیاری)
+                        // this.reset();
+                    });
+            });
+        </script>
+    </body>
 </html>
