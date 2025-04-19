@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم اطلاعات شخصی بدنسازی</title>
+    <!-- Tabler CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* دکمه گرد */
+        .theme-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #206bc4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        /* منوی کشویی */
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            display: none;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <button id="themeToggle" class="theme-toggle">
+        <i class="ti ti-sun"></i>
+    </button>
+    <div id="themeDropdown" class="dropdown-menu">
+        <div class="dropdown-item" data-theme="light">
+            <i class="ti ti-sun"></i> حالت روشن
+        </div>
+        <div class="dropdown-item" data-theme="dark">
+            <i class="ti ti-moon"></i> حالت تاریک
+        </div>
+        <div class="dropdown-item" data-theme="system">
+            <i class="ti ti-device-laptop"></i> حالت دستگاه
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const themeToggle = $("#themeToggle");
+            const themeDropdown = $("#themeDropdown");
+
+            // بارگذاری تم از حافظه مرورگر
+            const savedTheme = localStorage.getItem("theme") || "system";
+            applyTheme(savedTheme);
+
+            // نمایش/مخفی کردن منوی کشویی
+            themeToggle.click(function () {
+                themeDropdown.toggleClass("show");
+            });
+
+            // تغییر تم
+            $(".dropdown-item").click(function () {
+                const selectedTheme = $(this).data("theme");
+                applyTheme(selectedTheme);
+                localStorage.setItem("theme", selectedTheme); // ذخیره در حافظه مرورگر
+                themeDropdown.removeClass("show");
+            });
+
+            // اعمال تم
+            function applyTheme(theme) {
+                if (theme === "light") {
+                    $("html").attr("data-bs-theme", "light");
+                    themeToggle.html('<i class="ti ti-sun"></i>');
+                } else if (theme === "dark") {
+                    $("html").attr("data-bs-theme", "dark");
+                    themeToggle.html('<i class="ti ti-moon"></i>');
+                } else {
+                    // حالت دستگاه (سیستم)
+                    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    $("html").attr("data-bs-theme", prefersDark ? "dark" : "light");
+                    themeToggle.html('<i class="ti ti-device-laptop"></i>');
+                }
+            }
+
+            // بستن منوی کشویی هنگام کلیک خارج از آن
+            $(document).click(function (e) {
+                if (!themeToggle.is(e.target) && themeDropdown.has(e.target).length === 0) {
+                    themeDropdown.removeClass("show");
+                }
+            });
+        });
+    </script>
+</body>
+</html
