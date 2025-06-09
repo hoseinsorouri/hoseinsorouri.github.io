@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <!-- Tabler Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Persian Date Picker -->
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Persian Date -->
     <script src="https://unpkg.com/persian-date@latest/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@latest/dist/js/persian-datepicker.min.js"></script>
-
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="https://webramin.github.io/font/iransans/iran-sans.css">
     <style>
-        body {}
+        body {
+            transition: background .4s ease, color .4s ease;
+        }
+        /* فونت فارسی */
         .font-irs-b, .ir-b {
             font-family: 'IranianSansBold';
         }
@@ -25,27 +29,36 @@
             font-family: 'IranianSans';
         }
 
+        body {
+            direction: rtl;
+            font-family: 'IranianSans', sans-serif;
+        }
+
+        /* باکس فرم */
         .form-container {
             max-width: 800px;
             margin: 2rem auto;
             padding: 2rem;
-
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
+
+        /* عنوان فرم */
         .form-title {
-            color: #206bc4;
+            color: #800080;
             margin-bottom: 1.5rem;
             text-align: center;
         }
+
         .form-section {
             margin-bottom: 1.5rem;
             padding: 1rem;
             border-radius: 8px;
-
+            background-color: #800080;
         }
+
         .section-title {
-            color: #206bc4;
+            color: #800080;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -53,27 +66,76 @@
         .section-title i {
             margin-left: 8px;
         }
+
+        /* دکمه ارسال */
         .btn-submit {
             width: 100%;
             padding: 12px;
             font-size: 1.1rem;
         }
-        .contact-buttons {
+
+        /* نوار سن تولد */
+        #calculatedAge {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* دکمه شناور تغییر تم */
+        .theme-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #800080;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 999;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: #900090;
+        }
+
+        /* منوی کشویی تغییر تم */
+        #themeDropdown {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 998;
+        }
+
+        #themeDropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* دکمه‌های تماس تلگرام و واتساپ */
+        .contact-methods {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin-top: 10px;
         }
-        .btn-telegram {
-            background-color: #0088cc;
-            color: white;
-        }
-        .btn-whatsapp {
-            background-color: #25D366;
-            color: white;
-        }
-        .contact-btn {
-            flex: 1;
+
+        /* دکمه‌های رادیویی بدون پس‌زمینه */
+        .btn-telegram, .btn-whatsapp {
+            border: none;
+            color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -81,209 +143,395 @@
             padding: 10px;
             border-radius: 5px;
             font-weight: bold;
-            text-decoration: none;
-            transition: opacity 0.3s;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+
         }
-        .contact-btn:hover {
-            opacity: 0.9;
-            color: white;
+
+        /* وقتی انتخاب شدند */
+        #contactTelegram:checked + label.btn-telegram {
+            background-color: #0088cc;
+            color: #fff;
+            border-color: #0088cc;
         }
+        #contactWhatsApp:checked + label.btn-whatsapp {
+            background-color: #25D366;
+            color: #fff;
+            border-color: #25D366;
+        }
+
+        /* ورودی معتبر و نامعتبر */
+        input:valid {
+            border-color: #37b24d;
+        }
+        input:invalid {
+            border-color: #f03e3e;
+        }
+
+        /* فونت دیفالت تقویم شمسی */
         .pdp-default {
-            z-index: 9999;
+            z-index: 9999 !important;
         }
-        /* دکمه گرد */
-        .theme-toggle {
-            width: 50px;
-            height: 50px;
+        /* استایل‌های سفارشی برای هدر */
+        .card-img-top {
+            border-radius: 3px 3px 0 0 !important;
+        }
+
+        .text-purple-lt {
+            color: #b388ff !important;
+        }
+
+        .header-content h1 {
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        /* افکت hover برای کارت */
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+        }
+
+        #bio ,.pio {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(106, 0, 255, 0.2) !important;
+        }
+        /* Container Styles */
+        .theme-switcher-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        /* Floating Button Styles */
+        .floating-action-btn {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            background: #8a2be580;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .floating-action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 1px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-switcher-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Dropdown Menu Styles */
+        .theme-dropdown-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            min-width: 200px;
+            background: white;
+            border-radius: 12px;
+            padding: 8px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Dropdown Item Styles */
+        .theme-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s ease;
+        }
+        .theme-dropdown-item {
+            background: none;
+            border: none;
+        }
+
+        .theme-item-icon {
+            font-size: 1.2rem;
+            margin-left: 10px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .theme-item-text {
+            font-size: 0.9rem;
+        }
+
+        /* Light Theme Item */
+        .light-theme-item:hover {
+            color: #ff9800;
+        }
+
+        /* Dark Theme Item */
+        .dark-theme-item:hover {
+            color: #673ab7;
+        }
+
+        /* System Theme Item */
+        .system-theme-item:hover {
+            color: #4caf50;
+        }
+
+        /* Dark Mode Styles */
+        [data-bs-theme="dark"] .floating-action-btn {
+            background: #8a2be580;
+            box-shadow: 0 0 12px #5B00FF;
+        }
+
+        [data-bs-theme="dark"] .theme-dropdown-menu {
+            border: 1px solid #444;
+        }
+
+        [data-bs-theme="dark"] .theme-dropdown-item {
+            color: #000;
+        }
+
+        [data-bs-theme="dark"] .light-theme-item:hover {
+            color: #ffc107;
+        }
+
+        [data-bs-theme="dark"] .dark-theme-item:hover {
+            color: #9c27b0;
+        }
+
+        [data-bs-theme="dark"] .system-theme-item:hover {
+            color: #8bc34a;
+        }
+        [data-bs-theme="dark"] .pio {
+            transition-duration: 1s;
+            box-shadow: 0 0 10px #00B1FF;
+        }
+        .pio {
+            transition-duration: 1.4s;
+        }
+
+        /* Alert Styles */
+        #formAlert {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: auto;
+            max-width: 300px;
+        }
+
+        .scroll-btn {
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             background-color: #206bc4;
             color: white;
             border: none;
             cursor: pointer;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            transition: all 0.3s ease;
         }
 
-        /* منوی کشویی */
-        .dropdown-menu {
-            position: absolute;
-            top: 60px;
-            left: 20px;
-            display: none;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
+        .scroll-btn:hover {
+            background-color: #1a5bb7;
         }
 
-        .dropdown-menu.show {
-            display: block;
+        .scroll-btn.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
 
-        .dropdown-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .scroll-icon {
+            font-size: 24px;
+            transition: transform 0.3s ease;
         }
 
-        .dropdown-item:hover {
-            background-color: #f0f0f0;
+        .scroll-icon.up {
+            transform: rotate(180deg);
         }
     </style>
 </head>
 <body>
     <div class="page ir">
-        <div>
-
-            <button id="themeToggle" class="theme-toggle">
-                <i class="ti ti-sun"></i>
+        <!-- منوی انتخاب تم -->
+        <div class="theme-switcher-container">
+            <button id="themeToggle" class="theme-switcher-btn floating-action-btn">
+                <i class="ti ti-device-laptop theme-switcher-icon"></i>
             </button>
-            <div id="themeDropdown" class="dropdown-menu">
-                <div class="dropdown-item" data-theme="light">
-                    <i class="ti ti-sun"></i> حالت روشن
-                </div>
-                <div class="dropdown-item" data-theme="dark">
-                    <i class="ti ti-moon"></i> حالت تاریک
-                </div>
-                <div class="dropdown-item" data-theme="system">
-                    <i class="ti ti-device-laptop"></i> حالت دستگاه
-                </div>
+
+            <div id="themeDropdown" class="theme-dropdown-menu">
+                <button class="theme-dropdown-item light-theme-item" data-theme="light">
+                    <i class="ti ti-sun theme-item-icon"></i>
+                    <span class="theme-item-text">حالت روشن</span>
+                </button>
+                <button class="theme-dropdown-item dark-theme-item" data-theme="dark">
+                    <i class="ti ti-moon theme-item-icon"></i>
+                    <span class="theme-item-text">حالت تاریک</span>
+                </button>
+                <button class="theme-dropdown-item system-theme-item" data-theme="system">
+                    <i class="ti ti-device-laptop theme-item-icon"></i>
+                    <span class="theme-item-text">حالت دستگاه</span>
+                </button>
             </div>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="card">
-                            <div class="card-body p-4 p-md-5">
-                                <!-- Header Section -->
-                                <div class="text-center mb-4">
-                                    <h1 class="h2">حسین ادریس سروری</h1>
-                                    <div class="text-muted">
-                                        متخصص علوم ورزشی و مربی بدنسازی
+        </div>
+        <div class="container">
+            <div id="bio" class="row justify-content-center">
+                <div class="col-lg-10 my-3">
+                    <div class="card">
+                        <!-- هدر تصویری جدید -->
+                        <div class="card-img-top img-fluid" style="height: 250px; overflow: hidden; position: relative;">
+                            <img src="bg.jpg"
+                            alt="مربی بدنسازی"
+                            class="w-100 h-100 object-cover"
+                            style="filter: brightness(0.7) contrast(1.2);">
+                            <div class="header-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(106, 0, 255, 0.3), rgba(0, 0, 0, 0.7));"></div>
+                            <div class="header-content" style="position: absolute; bottom: 20px; right: 20px; color: white;">
+                                <h1 class="h2 mb-1" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">حسین سروری</h1>
+                                <div class="text-purple-lt" style="font-size: 1.1rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                                    <i class="ti ti-dumbbell"></i> مربی بدنسازی حرفه‌ای
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4 p-md-5">
+                            <!-- بخش مدارک و سوابق (کد قبلی بدون تغییر) -->
+                            <div class="mb-4">
+                                <h2 class="h4 mb-3">
+                                    <i class="icon icon-tabler-award me-2"></i>
+                                    مدارک و سوابق تخصصی
+                                </h2>                      <div class="list-group list-group-flush">
+                                    <div class="list-group-item">
+                                        <i class="icon icon-tabler-school me-2"></i>
+                                        کارشناس رشته علوم ورزشی
+                                    </div>
+                                    <div class="list-group-item">
+                                        <i class="icon icon-tabler-certificate me-2"></i>
+                                        مربی درجه ۳ فدراسیون بدنسازی ایران
+                                    </div>
+                                    <div class="list-group-item">
+                                        <i class="icon icon-tabler-badge me-2"></i>
+                                        عضو رسمی فدراسیون بدنسازی و پرورش اندام ایران
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Qualifications Section -->
-                                <div class="mb-4">
-                                    <h2 class="h4 mb-3">
-                                        <i class="icon icon-tabler-award me-2"></i>
-                                        مدارک و سوابق تخصصی
-                                    </h2>
-                                    <div class="list-group list-group-flush">
-                                        <div class="list-group-item">
-                                            <i class="icon icon-tabler-school me-2"></i>
-                                            کارشناس رشته علوم ورزشی
-                                        </div>
-                                        <div class="list-group-item">
-                                            <i class="icon icon-tabler-certificate me-2"></i>
-                                            مربی درجه ۲ فدراسیون بدنسازی ایران
-                                        </div>
-                                        <div class="list-group-item">
-                                            <i class="icon icon-tabler-badge me-2"></i>
-                                            عضو رسمی فدراسیون بدنسازی و پرورش اندام ایران
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Certificates Section -->
-                                <div class="mb-4">
-                                    <h2 class="h4 mb-3">
-                                        <i class="icon icon-tabler-certificate-2 me-2"></i>
-                                        مدارک تخصصی
-                                    </h2>
-                                    <div class="row g-2">
-                                        <div class="col-md-6">
-                                            <div class="card card-sm bg-primary-lt">
-                                                <div class="card-body">
-                                                    <i class="icon icon-tabler-stretching me-2"></i>
-                                                    حرکات اصلاحی و آسیب‌شناسی ورزشی
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card card-sm bg-blue-lt">
-                                                <div class="card-body">
-                                                    <i class="icon icon-tabler-run me-2"></i>
-                                                    طراحی برنامه‌های فیتنس و تناسب اندام
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card card-sm bg-purple-lt">
-                                                <div class="card-body">
-                                                    <i class="icon icon-tabler-muscle me-2"></i>
-                                                    طراحی برنامه‌های بدنسازی تخصصی
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card card-sm bg-green-lt">
-                                                <div class="card-body">
-                                                    <i class="icon icon-tabler-leaf me-2"></i>
-                                                    مشاور تغذیه ورزشی
-                                                </div>
+                            <!-- Certificates Section -->
+                            <div class="mb-4">
+                                <h2 class="h4 mb-3">
+                                    <i class="icon icon-tabler-certificate-2 me-2"></i>
+                                    دوره و تخصص
+                                </h2>
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="card card-sm bg-primary-lt">
+                                            <div class="card-body">
+                                                <i class="icon icon-tabler-stretching me-2"></i>
+                                                حرکات اصلاحی و آسیب‌شناسی ورزشی
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="card card-sm bg-blue-lt">
+                                            <div class="card-body">
+                                                <i class="icon icon-tabler-run me-2"></i>
+                                                طراحی برنامه‌های فیتنس و تناسب اندام
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card card-sm bg-purple-lt">
+                                            <div class="card-body">
+                                                <i class="icon icon-tabler-muscle me-2"></i>
+                                                طراحی برنامه‌های بدنسازی تخصصی
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card card-sm bg-green-lt">
+                                            <div class="card-body">
+                                                <i class="icon icon-tabler-leaf me-2"></i>
+                                                مشاور تغذیه ورزشی
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
 
-                                <!-- Work Style Section -->
-                                <div class="mb-4">
-                                    <h2 class="h4 mb-3">
-                                        <i class="icon icon-tabler-chart-dots-3 me-2"></i>
-                                        سبک کاری
-                                    </h2>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-3 text-primary">
-                                                            <i class="icon icon-tabler-book-2" style="font-size: 2rem;"></i>
-                                                        </div>
-                                                        <div>
-                                                            <h3 class="h5">علمی + کاربردی</h3>
-                                                            <p class="text-muted mb-0">
-                                                                ترکیب دانش آکادمیک با تجربه عملی
-                                                            </p>
-                                                        </div>
+                            <!-- Work Style Section -->
+                            <div class="mb-4">
+                                <h2 class="h4 mb-3">
+                                    <i class="icon icon-tabler-chart-dots-3 me-2"></i>
+                                    سبک کاری
+                                </h2>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3 text-primary">
+                                                        <i class="icon icon-tabler-book-2" style="font-size: 2rem;"></i>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-3 text-blue">
-                                                            <i class="icon icon-tabler-user-circle" style="font-size: 2rem;"></i>
-                                                        </div>
-                                                        <div>
-                                                            <h3 class="h5">برنامه‌ریزی شخصی‌سازی شده</h3>
-                                                            <p class="text-muted mb-0">
-                                                                بر اساس ارزیابی فیزیکی و اهداف ورزشکار
-                                                            </p>
-                                                        </div>
+                                                    <div>
+                                                        <h3 class="h5">علمی + کاربردی</h3>
+                                                        <p class="text-muted mb-0">
+                                                            ترکیب دانش آکادمیک با تجربه عملی
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3 text-blue">
+                                                        <i class="icon icon-tabler-user-circle" style="font-size: 2rem;"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="h5">برنامه‌ریزی شخصی‌سازی شده</h3>
+                                                        <p class="text-muted mb-0">
+                                                            بر اساس ارزیابی فیزیکی و اهداف ورزشکار
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
 
-                                <!-- Additional Info -->
-                                <div class="alert alert-info">
-                                    <div class="d-flex">
-                                        <div class="me-3">
-                                            <i class="icon icon-tabler-info-circle"></i>
-                                        </div>
-                                        <div>
-                                            در صورت نیاز به اطلاعات بیشتر یا مشاهده گواهی‌ها، خوشحال می‌شوم در اختیارتان قرار دهم.
-                                        </div>
+                            <!-- Additional Info -->
+                            <div class="pio alert alert-info">
+                                <div class="d-flex">
+                                    <div class="me-3">
+                                        <i class="icon icon-tabler-info-circle"></i>
+                                    </div>
+                                    <div>
+                                        در صورت نیاز به اطلاعات بیشتر یا مشاهده گواهی‌ها، خوشحال می‌شوم در اختیارتان قرار دهم.
                                     </div>
                                 </div>
                             </div>
@@ -291,14 +539,20 @@
                     </div>
                 </div>
             </div>
-            <div class="form-container">
-                <h1 class="form-title">
+            <!-- دکمه اسکرول -->
+            <button id="scrollBtn" class="scroll-btn">
+                <i class="ti ti-chevron-down scroll-icon"></i>
+            </button>
+
+            <div id="formSection" class="form-container">
+                <h1 id="form"class="form-title">
                     <i class="ti ti-clipboard-text"></i> فرم اطلاعات شخصی بدنسازی
                 </h1>
 
                 <form id="personalForm">
+
                     <!-- اطلاعات پایه -->
-                    <div class="form-section bg-info-lt">
+                    <div class="form-section bg-purple-lt">
                         <h3 class="section-title">
                             <i class="ti ti-user"></i> اطلاعات شخصی
                         </h3>
@@ -322,375 +576,724 @@
                                 <label class="form-label">شماره تلفن همراه</label>
                                 <input type="tel" class="form-control" id="phone" placeholder="09123456789"
                                 pattern="09[0-9]{9}" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">جنسیت</label>
-                                <select class="form-select" id="gender" required>
-                                    <option value="" selected disabled>انتخاب کنید</option>
-                                    <option value="male">مرد</option>
-                                    <option value="female">زن</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">وزن (کیلوگرم)</label>
-                                <input type="number" class="form-control" id="weight" min="30" max="300" maxlength="3" step="0.1" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">قد (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="height" min="100" max="250" maxlength="3"required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- اندازه‌گیری‌ها -->
-                    <div class="form-section bg-info-lt">
-                        <h3 class="section-title">
-                            <i class="ti ti-measure"></i> اندازه‌گیری‌های بدنی
-                        </h3>
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">دور ران (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="thigh" min="1" max="200" maxlength="3" step="0.1" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">دور شکم (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="abdomen" min="1" max="200" maxlength="3" step="0.1" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">دور باسن (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="hip" min="1" max="200" maxlength="3" step="0.1" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">دور سینه (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="chest" min="1" max="200" maxlength="3" step="0.1" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">دور بازو (سانتی‌متر)</label>
-                                <input type="number" class="form-control" id="arm" min="1" max="200" maxlength="3" step="0.1" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- سوالات بله/خیر -->
-                    <div class="form-section bg-info-lt">
-                        <h3 class="section-title">
-                            <i class="ti ti-question-mark"></i> سوالات سلامت
-                        </h3>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="q1">
-                                <span class="form-check-label">آیا سابقه بیماری قلبی دارید؟</span>
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="q2">
-                                <span class="form-check-label">آیا سیگار مصرف می‌کنید؟</span>
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="q3">
-                                <span class="form-check-label">آیا به طور منظم ورزش می‌کنید؟</span>
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="q4">
-                                <span class="form-check-label">آیا رژیم غذایی خاصی دارید؟</span>
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="q5">
-                                <span class="form-check-label">آیا داروی خاصی مصرف می‌کنید؟</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- سوالات مکمل‌های بدنسازی -->
-                    <div class="form-section bg-info-lt">
-                        <h3 class="section-title">
-                            <i class="ti ti-pill"></i> مکمل‌های بدنسازی
-                        </h3>
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="supplement1">
-                                <span class="form-check-label">آیا تاکنون از مکمل‌های بدنسازی استفاده کرده‌اید؟</span>
-                            </label>
-                        </div>
-                        <div class="supplement-details mb-3" style="display: none;">
-                            <div class="mb-3">
-                                <label class="form-label">چه نوع مکمل‌هایی استفاده کرده‌اید؟</label>
-                                <div class="row g-2">
-                                    <div class="col-md-3">
-                                        <label class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="supplementType" value="protein">
-                                            <span class="form-check-label">پروتئین</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="supplementType" value="creatine">
-                                            <span class="form-check-label">کراتین</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="supplementType" value="bcaa">
-                                            <span class="form-check-label">BCAA</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="supplementType" value="other">
-                                            <span class="form-check-label">سایر</span>
-                                        </label>
-                                    </div>
+                                <!-- این کانتینر ابتدا پنهان است -->
+                                <div class="contact-methods" style="display: none;">
+                                    <input type="radio" class="btn-check" name="contactMethod" id="contactTelegram" value="telegram" autocomplete="off">
+                                    <label class="btn btn-telegram" for="contactTelegram">
+                                        <i class="ti ti-brand-telegram"></i> تلگرام
+                                    </label>
+                                    <input type="radio" class="btn-check" name="contactMethod" id="contactWhatsApp" value="whatsapp" autocomplete="off">
+                                    <label class="btn btn-whatsapp" for="contactWhatsApp">
+                                        <i class="ti ti-brand-whatsapp"></i> واتساپ
+                                    </label>
                                 </div>
                             </div>
-
-                            <div class="mb-3" id="otherSupplementDiv" style="display: none;">
-                                <label class="form-label">توضیح دهید:</label>
-                                <textarea class="form-control" id="otherSupplement" rows="2"></textarea>
-                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="wantSupplementInfo">
-                                <span class="form-check-label">آیا مایل به دریافت اطلاعات درباره مکمل‌های مناسب هستید؟</span>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+    <label class="form-label">جنسیت</label>
+    <div class="dropdown">
+        <button class="btn btn-outline-purple dropdown-toggle w-100 text-end" type="button" id="genderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="dropdown-text">انتخاب کنید</span>
+        </button>
+        <ul class="dropdown-menu w-100" aria-labelledby="genderDropdown">
+            <li><a class="dropdown-item" href="#" data-value="male">مرد</a></li>
+            <li><a class="dropdown-item" href="#" data-value="female">زن</a></li>
+        </ul>
+        <input type="hidden" name="gender" id="selectedGender" required>
+    </div>
+</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">وزن (کیلوگرم)</label>
+                            <input type="number" class="form-control" id="weight" min="30" max="300" maxlength="3" step="0.1" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">قد (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="height" min="100" max="250" maxlength="3"required>
+                        </div>
+                    </div>
+                
+                <!-- اندازه‌گیری‌ها -->
+                <div class="form-section bg-purple-lt">
+                    <h3 class="section-title">
+                        <i class="ti ti-measure"></i> اندازه‌گیری‌های بدنی
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">دور ران (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="thigh" min="1" max="200" maxlength="3" step="0.1" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">دور شکم (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="abdomen" min="1" max="200" maxlength="3" step="0.1" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">دور باسن (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="hip" min="1" max="200" maxlength="3" step="0.1" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">دور سینه (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="chest" min="1" max="200" maxlength="3" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">دور بازو (سانتی‌متر)</label>
+                            <input type="number" class="form-control" id="arm" min="1" max="200" maxlength="3" step="0.1" required>
+                        </div>
+                    </div>
+                    <!-- آپلود دو عکس (تمام‌رخ و نیم‌رخ) -->
+                    <div class="row">
+                        <!-- بخش آپلود عکس تمام‌رخ -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="frontImage">
+                                عکس تمام‌رخ
+                                <!-- آیکون راهنما با مودال -->
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#frontImageHelpModal" class="text-decoration-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon mx-1 icons-tabler-outline icon-tabler-help-circle">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                        <path d="M12 16v.01" />
+                                        <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                                    </svg>
+                                </a>
                             </label>
+                            <input type="file" class="form-control" id="frontImage" accept="image/*">
+                            <small class="text-muted">تصویر واضح از نمای جلو (مثال: <a href="#" data-bs-toggle="modal" data-bs-target="#frontImageHelpModal">نمونه</a>)</small>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="wantToPurchase">
-                                <span class="form-check-label">آیا قصد خرید مکمل دارید؟</span>
+                        <!-- بخش آپلود عکس نیمرخ -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="sideImage">
+                                عکس نیمرخ
+                                <!-- آیکون راهنما با مودال -->
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#sideImageHelpModal" class="text-decoration-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon mx-1 icons-tabler-outline icon-tabler-help-circle">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                        <path d="M12 16v.01" />
+                                        <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                                    </svg>
+                                </a>
                             </label>
-                        </div>
-
-                        <div class="purchase-details mb-3" style="display: none;">
-                            <div class="mb-3">
-                                <label class="form-label">بودجه شما برای خرید مکمل چقدر است؟</label>
-                                <select class="form-select" id="budget">
-                                    <option value="" selected disabled>انتخاب کنید</option>
-                                    <option value="low">کمتر از ۵۰۰ هزار تومان</option>
-                                    <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
-                                    <option value="high">۱ تا ۲ میلیون تومان</option>
-                                    <option value="veryHigh">بیش از ۲ میلیون تومان</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">هدف شما از مصرف مکمل چیست؟</label>
-                                <select class="form-select" id="goal">
-                                    <option value="" selected disabled>انتخاب کنید</option>
-                                    <option value="muscleGain">افزایش حجم عضلانی</option>
-                                    <option value="fatLoss">چربی سوزی</option>
-                                    <option value="recovery">ریکاوری بهتر</option>
-                                    <option value="performance">بهبود عملکرد</option>
-                                    <option value="health">سلامت عمومی</option>
-                                </select>
-                            </div>
+                            <input type="file" class="form-control" id="sideImage" accept="image/*">
+                            <small class="text-muted">تصویر واضح از نمای پهلو (مثال: <a href="#" data-bs-toggle="modal" data-bs-target="#sideImageHelpModal">نمونه</a>)</small>
                         </div>
                     </div>
-                    <div class="mb-3" id="description">
-                        <label class="form-label">توضیح دهید:</label>
-                        <textarea class="form-control" id="ddoso" rows="2"></textarea>
-                    </div>
-                    <!-- دکمه‌های ارتباطی -->
-                    <div class="contact-buttons">
-                        <a href="#" class="contact-btn btn-telegram" id="telegramBtn">
-                            <i class="ti ti-brand-telegram"></i>
-                            ارتباط با تلگرام
-                        </a>
-                        <a href="#" class="contact-btn btn-whatsapp" id="whatsappBtn">
-                            <i class="ti ti-brand-whatsapp"></i>
-                            ارتباط با واتساپ
-                        </a>
+
+                    <!-- مودال راهنمای عکس تمام‌رخ -->
+                    <div class="modal fade" id="frontImageHelpModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">راهنمای عکس تمام‌رخ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>مثال صحیح:</h6>
+                                            <img src="https://example.com/front-sample.jpg" class="img-fluid rounded border border-success" alt="نمونه صحیح">
+                                            <ul class="mt-3">
+                                                <li>تصویر باید از <strong>نمای کاملاً روبرو</strong> باشد</li>
+                                                <li>صورت در مرکز تصویر قرار گیرد</li>
+                                                <li>پس‌زمینه ساده و روشن باشد</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>مثال نادرست:</h6>
+                                            <img src="https://example.com/front-bad-sample.jpg" class="img-fluid rounded border border-danger" alt="نمونه نادرست">
+                                            <ul class="mt-3">
+                                                <li>عدم وجود سایه روی صورت</li>
+                                                <li>عدم چرخش سر</li>
+                                                <li>عدم وجود اشیاء مزاحم</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">متوجه شدم</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-submit">
-                        <i class="ti ti-send"></i> ارسال اطلاعات
-                    </button>
-                </form>
-            </div>
+                    <!-- مودال راهنمای عکس نیمرخ -->
+                    <div class="modal fade" id="sideImageHelpModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">راهنمای عکس نیمرخ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>مثال صحیح:</h6>
+                                            <img src="https://example.com/side-sample.jpg" class="img-fluid rounded border border-success" alt="نمونه صحیح">
+                                            <ul class="mt-3">
+                                                <li>تصویر باید از <strong>نمای 90 درجه پهلو</strong> باشد</li>
+                                                <li>خط فک به وضوح دیده شود</li>
+                                                <li>موها نباید صورت را بپوشانند</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>مثال نادرست:</h6>
+                                            <img src="https://example.com/side-bad-sample.jpg" class="img-fluid rounded border border-danger" alt="نمونه نادرست">
+                                            <ul class="mt-3">
+                                                <li>عدم وجود چرخش بیش از حد سر</li>
+                                                <li>عدم وجود سایه‌های شدید</li>
+                                                <li>وضوح کافی تصویر</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">متوجه شدم</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- سوالات بله/خیر -->
+
+                <div class="form-section bg-purple-lt">
+                    <h3 class="section-title">
+                        <i class="ti ti-question-mark"></i> سوال سلامت
+                    </h3>
+                    <div class="mb-3">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="q1">
+                            <span class="form-check-label">آیا سابقه بیماری دارید؟</span>
+                        </label>
+                    </div>
+                    <div class="mb-3" id="heartHistoryDetails" style="display: none;">
+                        <label class="form-label" for="heartDetails">لطفاً جزئیات را بنویسید:</label>
+                        <textarea class="form-control" id="heartDetails" rows="2"></textarea>
+                    </div>
+                </div>
+                <!-- سوال ساعت تمرین -->
+
+                <div class="form-section bg-purple-lt">
+                    <h3 class="section-title">
+                        <i class="ti ti-clock-hour-4"></i> زمان تمرین دلخواه
+                    </h3>
+                    <div dir="ltr" class="btn-group w-100 mb-3" role="group" aria-label="زمان تمرین">
+                        <input type="radio" class="btn-check" name="trainingTime" id="timeMorning" value="4am" autocomplete="off">
+                        <label class="btn btn-outline-purple" for="timeMorning">۴ صبح</label>
+
+                        <input type="radio" class="btn-check" name="trainingTime" id="timeEvening" value="4pm" autocomplete="off">
+                        <label class="btn btn-outline-purple" for="timeEvening">۴ عصر</label>
+                    </div>
+                    <div dir="ltr" class="btn-group w-100 mb-3" role="group" aria-label="شرایط تمرین">
+                        <input type="radio" class="btn-check" name="trainingLevel" id="advanced" value="advanced" autocomplete="off">
+                        <label class="btn-sm btn btn-outline-danger" for="advanced">۵ روز در هفته  <br />(حرفه‌ای)</label>
+
+                        <input type="radio" class="btn-check" name="trainingLevel" id="intermediate" value="intermediate" autocomplete="off">
+                        <label class="btn-sm btn btn-outline-warning" for="intermediate">۴ روز در هفته  <br />(متوسط)</label>
+
+
+                        <input type="radio" class="btn-check" name="trainingLevel" id="beginner" value="beginner" autocomplete="off">
+                        <label class="btn-sm btn btn-outline-success" for="beginner">۳ روز در هفته  <br />(مبتدی)</label>
+
+                    </div>
+
+                </div>
+
+                <!-- سوالات مکمل‌های بدنسازی -->
+                <div class="form-section bg-purple-lt">
+                    <h3 class="section-title">
+                        <i class="ti ti-pill"></i> مکمل‌های بدنسازی
+                    </h3>
+                    <div class="mb-3">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="supplement1">
+                            <span class="form-check-label">آیا تاکنون از مکمل‌های بدنسازی استفاده کرده‌اید؟</span>
+                        </label>
+                    </div>
+                    <div class="supplement-details mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">چه نوع مکمل‌هایی استفاده کرده‌اید؟</label>
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="supplementType" value="protein">
+                                        <span class="form-check-label">پروتئین</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="supplementType" value="creatine">
+                                        <span class="form-check-label">کراتین</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="supplementType" value="bcaa">
+                                        <span class="form-check-label">BCAA</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="supplementType" value="other">
+                                        <span class="form-check-label">سایر</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="otherSupplementDiv" style="display: none;">
+                            <label class="form-label">توضیح دهید:</label>
+                            <textarea class="form-control" id="otherSupplement" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="wantSupplementInfo">
+                            <span class="form-check-label">آیا مایل به دریافت اطلاعات درباره مکمل‌های مناسب هستید؟</span>
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="wantToPurchase">
+                            <span class="form-check-label">آیا قصد خرید مکمل دارید؟</span>
+                        </label>
+                    </div>
+
+                    <div class="purchase-details mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">بودجه شما برای خرید مکمل چقدر است؟</label>
+                            <select class="form-select" id="budget">
+                                <option value="" selected disabled>انتخاب کنید</option>
+                                <option value="low">کمتر از ۵۰۰ هزار تومان</option>
+                                <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
+                                <option value="high">۱ تا ۲ میلیون تومان</option>
+                                <option value="veryHigh">بیش از ۲ میلیون تومان</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">هدف شما از مصرف مکمل چیست؟</label>
+                            <select class="form-select" id="goal">
+                                <option value="" selected disabled>انتخاب کنید</option>
+                                <option value="muscleGain">افزایش حجم عضلانی</option>
+                                <option value="fatLoss">چربی سوزی</option>
+                                <option value="recovery">ریکاوری بهتر</option>
+                                <option value="performance">بهبود عملکرد</option>
+                                <option value="health">سلامت عمومی</option>
+                            </select>
+                        </div>
+                    </div>
+                
+                <div class="mb-3" id="description">
+                    <label class="form-label text-purple-lt">توضیح دهید:</label>
+                    <textarea class="form-control" id="ddoso" rows="8"></textarea>
+                </div>
+                <button type="submit" class="btn btn-purple btn-submit">
+                    <i class="ti ti-send"></i> ارسال اطلاعات
+                </button>
+            </form>
         </div>
+    </div>
+</div>
+<div id="formAlert" class="alert d-none mt-3" role="alert"></div>
 
-        <script>
-            $(document).ready(function() {
-                // Persian Date Picker
-                $('#birthDate').persianDatepicker({
-                    format: 'YYYY/MM/DD',
-                    maxDate: new persianDate().add('year', 0).valueOf(),
-                    onSelect: function(unix) {
-                        calculateAge(unix);
-                    }
-                });
-                const themeToggle = $("#themeToggle");
-                const themeDropdown = $("#themeDropdown");
+<!-- JS Bootstrap
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-                // بارگذاری تم از حافظه مرورگر
-                const savedTheme = localStorage.getItem("theme") || "system";
-                applyTheme(savedTheme);
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+  const dropdownText = document.querySelector('#genderDropdown .dropdown-text');
+  const hiddenInput = document.getElementById('selectedGender');
 
-                // نمایش/مخفی کردن منوی کشویی
-                themeToggle.click(function () {
-                    themeDropdown.toggleClass("show");
-                });
+  dropdownItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      const value = this.getAttribute('data-value');
+      const text = this.textContent.trim();
 
-                // تغییر تم
-                $(".dropdown-item").click(function () {
-                    const selectedTheme = $(this).data("theme");
-                    applyTheme(selectedTheme);
-                    localStorage.setItem("theme", selectedTheme); // ذخیره در حافظه مرورگر
-                    themeDropdown.removeClass("show");
-                });
+      dropdownText.textContent = text;
+      hiddenInput.value = value;
+    });
+  });
+});
+</script>
+<script>
+    $(document).ready(function () {
+        // --------------------------
+        // بخش تاریخ تولد و محاسبه سن
+        // --------------------------
+        $('#birthDate').persianDatepicker({
+            format: 'YYYY/MM/DD',
+            maxDate: new persianDate().valueOf(),
+            onSelect: function (unix) {
+                const birthDate = new persianDate(unix);
+                const today = new persianDate();
+                let age = today.year() - birthDate.year();
 
-                // اعمال تم
-                function applyTheme(theme) {
-                    if (theme === "light") {
-                        $("html").attr("data-bs-theme", "light");
-                        themeToggle.html('<i class="ti ti-sun"></i>');
-                    } else if (theme === "dark") {
-                        $("html").attr("data-bs-theme", "dark");
-                        themeToggle.html('<i class="ti ti-moon"></i>');
-                    } else {
-                        // حالت دستگاه (سیستم)
-                        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                        $("html").attr("data-bs-theme", prefersDark ? "dark": "light");
-                        themeToggle.html('<i class="ti ti-device-laptop"></i>');
-                    }
+                if (today.month() < birthDate.month() ||
+                    (today.month() === birthDate.month() && today.date() < birthDate.date())) {
+                    age--;
                 }
 
-                // بستن منوی کشویی هنگام کلیک خارج از آن
-                $(document).click(function (e) {
-                    if (!themeToggle.is(e.target) && themeDropdown.has(e.target).length === 0) {
-                        themeDropdown.removeClass("show");
-                    }
-                });
+                $('#calculatedAge').text(`سن: ${age} سال`);
+            }
+        });
+        // --------------------------
+        // مدیریت منوی کشویی انتخاب جنسیت
+        // --------------------------
+       
+    // مدیریت کلیک روی آیتم‌های منوی کشویی جنسیت
+    $('.dropdown-menu .dropdown-item').on('click', function (e) {
+        e.preventDefault();
+        const value = $(this).data('value'); // دریافت مقدار data-value
+        const text = $(this).text().trim(); // دریافت متن آیتم
 
+        // به‌روزرسانی متن دکمه dropdown
+        $('#genderDropdown .dropdown-text').text(text);
+        // ذخیره مقدار در input مخفی
+        $('#selectedGender').val(value);
+        // بستن منوی کشویی
+        $('#genderDropdown').dropdown('hide');
+    });
 
-                // محاسبه سن بر اساس تاریخ تولد
-                function calculateAge(timestamp) {
-                    const birthDate = new persianDate(timestamp);
-                    const today = new persianDate();
+    // اعتبارسنجی فرم هنگام ارسال
+    $('#personalForm').on('submit', function (e) {
+        if (!$('#selectedGender').val()) {
+            e.preventDefault();
+            showAlert('لطفاً جنسیت را انتخاب کنید', 'danger');
+        }
+    });
 
-                    let age = today.year() - birthDate.year();
+// --------------------------
+        // بخش اعتبارسنجی و انتخاب روش تماس
+        // --------------------------
+        $('#phone').on('input',
+            function () {
+                const val = $(this).val();
 
-                    // اگر هنوز تاریخ تولد امسال نرسیده باشد، یک سال کم می‌کنیم
-                    if (today.month() < birthDate.month() ||
-                        (today.month() === birthDate.month() && today.date() < birthDate.date())) {
-                        age--;
-                    }
-
-                    $('#calculatedAge').text(`سن: ${age} سال`);
+                if (/^09[0-9]{9}$/.test(val)) {
+                    $('.contact-methods').slideDown();
+                } else {
+                    $('.contact-methods').slideUp();
                 }
-
-                // نمایش/مخفی کردن جزئیات مکمل
-                $('#supplement1').change(function() {
-                    if (this.checked) {
-                        $('.supplement-details').slideDown();
-                    } else {
-                        $('.supplement-details').slideUp();
-                    }
-                });
-
-                // نمایش/مخفی کردن فیلد توضیحات مکمل
-                $('input[name="supplementType"]').change(function() {
-                    if ($('input[name="supplementType"][value="other"]').is(':checked')) {
-                        $('#otherSupplementDiv').slideDown();
-                    } else {
-                        $('#otherSupplementDiv').slideUp();
-                    }
-                });
-
-                // نمایش/مخفی کردن جزئیات خرید
-                $('#wantToPurchase').change(function() {
-                    if (this.checked) {
-                        $('.purchase-details').slideDown();
-                    } else {
-                        $('.purchase-details').slideUp();
-                    }
-                });
-
-                // تنظیم دکمه‌های ارتباطی
-                $('#telegramBtn').click(function(e) {
-                    e.preventDefault();
-                    const phone = $('#phone').val();
-                    if (phone) {
-                        window.open(`https://t.me/+${phone.substring(1)}`, '_blank');
-                    } else {
-                        alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
-                    }
-                });
-
-                $('#whatsappBtn').click(function(e) {
-                    e.preventDefault();
-                    const phone = $('#phone').val();
-                    if (phone) {
-                        window.open(`https://wa.me/98${phone.substring(1)}`, '_blank');
-                    } else {
-                        alert('لطفا ابتدا شماره تلفن خود را وارد کنید');
-                    }
-                });
-
-                // ارسال فرم
-                $('#personalForm').on('submit',
-                    function(e) {
-                        e.preventDefault();
-
-                        // جمع‌آوری داده‌ها
-                        const formData = {
-                            personalInfo: {
-                                firstName: $('#firstName').val(),
-                                lastName: $('#lastName').val(),
-                                birthDate: $('#birthDate').val(),
-                                phone: $('#phone').val(),
-                                gender: $('#gender').val(),
-                                weight: $('#weight').val(),
-                                height: $('#height').val()
-                            },
-                            measurements: {
-                                thigh: $('#thigh').val(),
-                                waist: $('#waist').val(),
-                                hip: $('#hip').val(),
-                                chest: $('#chest').val()
-                            },
-                            healthQuestions: {
-                                q1: $('#q1').is(':checked'),
-                                q2: $('#q2').is(':checked'),
-                                q3: $('#q3').is(':checked'),
-                                q4: $('#q4').is(':checked'),
-                                q5: $('#q5').is(':checked')
-                            },
-                            supplements: {
-                                usedBefore: $('#supplement1').is(':checked'),
-                                types: $('input[name="supplementType"]:checked').map(function() {
-                                    return $(this).val();
-                                }).get(),
-                                otherSupplements: $('#otherSupplement').val(),
-                                wantInfo: $('#wantSupplementInfo').is(':checked'),
-                                wantToPurchase: $('#wantToPurchase').is(':checked'),
-                                budget: $('#budget').val(),
-                                goal: $('#goal').val()
-                            }
-                        };
-
-                        // در اینجا می‌توانید داده‌ها را به سرور ارسال کنید
-                        console.log('Form Data:', formData);
-
-                        // نمایش پیام موفقیت
-                        alert('اطلاعات با موفقیت ثبت شد!');
-
-                        // ریست فرم (اختیاری)
-                        // this.reset();
-                    });
             });
-        </script>
-    </body>
+
+        $('#contactTelegram').on('change',
+            function () {
+                if (this.checked) $('#contactWhatsApp').prop('checked', false);
+            });
+
+        $('#contactWhatsApp').on('change',
+            function () {
+                if (this.checked) $('#contactTelegram').prop('checked', false);
+            });
+
+        // --------------------------
+        // بخش نمایش/پنهان کردن جزئیات فرم
+        // --------------------------
+        $('#q1').change(function () {
+            $('#heartHistoryDetails').slideToggle(this.checked);
+        });
+
+        $('#supplement1').change(function () {
+            $('.supplement-details').slideToggle(this.checked);
+        });
+
+        $('input[name="supplementType"]').change(function () {
+            if ($('input[value="other"]').is(':checked')) {
+                $('#otherSupplementDiv').slideDown();
+            } else {
+                $('#otherSupplementDiv').slideUp();
+            }
+        });
+
+        $('#wantToPurchase').change(function () {
+            $('.purchase-details').slideToggle(this.checked);
+        });
+
+        // --------------------------
+        // بخش مدیریت فرم و ذخیره‌سازی
+        // --------------------------
+        const storageKey = 'formDataFull';
+
+        /**
+        * جمع‌آوری داده‌های فرم
+        * @returns {Object} داده‌های فرم
+        */
+        function getFormData() {
+            const data = {};
+            $('#personalForm').find('input, select, textarea').each(function () {
+                const id = $(this).attr('id');
+                if (!id) return;
+
+                if ($(this).is(':checkbox')) {
+                    data[id] = $(this).prop('checked');
+                } else if ($(this).is(':radio')) {
+                    if ($(this).prop('checked')) {
+                        data[$(this).attr('name')] = $(this).val();
+                    }
+                } else if ($(this).attr('type') !== 'file') {
+                    data[id] = $(this).val();
+                }
+            });
+            return data;
+        }
+
+        /**
+        * پر کردن فرم با داده‌های ذخیره شده
+        * @param {Object} data - داده‌های فرم
+        */
+        function setFormData(data) {
+            for (const key in data) {
+                const el = $(`#${key}`);
+                if (el.length) {
+                    if (el.is(':checkbox')) {
+                        el.prop('checked', data[key]).trigger('change');
+                    } else {
+                        el.val(data[key]);
+                    }
+                } else if ($(`input[name="${key}"]`).length) {
+                    $(`input[name="${key}"][value="${data[key]}"]`).prop('checked', true).trigger('change');
+                }
+            }
+        }
+
+        /**
+        * غیرفعال کردن فرم برای ویرایش
+        */
+        function disableForm() {
+            $('#personalForm').find('input, select, textarea').prop('disabled', true);
+            $('.btn-submit').text('ویرایش اطلاعات');
+        }
+
+        /**
+        * فعال کردن فرم برای ویرایش
+        */
+        function enableForm() {
+            $('#personalForm').find('input, select, textarea').prop('disabled', false);
+            $('.btn-submit').text('ارسال اطلاعات');
+        }
+
+        // --------------------------
+        // بخش ارسال فرم به سرور و ذخیره محلی
+        // --------------------------
+        $('#personalForm').on('submit', function (e) {
+            e.preventDefault();
+
+            // اگر در حالت ویرایش هستیم
+            if ($('.btn-submit').text().includes('ویرایش')) {
+                enableForm();
+                return;
+            }
+
+            // اعتبارسنجی شماره تلفن
+            const phoneVal = $('#phone').val();
+            if (!/^09[0-9]{9}$/.test(phoneVal)) {
+                showAlert('لطفاً شماره تلفن معتبر وارد کنید', 'danger');
+                return;
+            }
+
+            // جمع‌آوری داده‌های فرم
+            const formData = getFormData();
+
+            // ذخیره محلی
+            localStorage.setItem(storageKey, JSON.stringify(formData));
+
+            // نمایش وضعیت ارسال
+            showAlert('در حال ارسال اطلاعات...', 'info');
+
+            // ارسال به Formspree
+            $.ajax({
+                url: "https://formspree.io/f/mrgrllzz",
+                method: "POST",
+                data: formData,
+                dataType: "json",
+                success: function(response) {
+                    disableForm();
+                    showAlert('اطلاعات با موفقیت ذخیره و ارسال شد', 'success');
+                },
+                error: function(xhr, status, error) {
+                    showAlert('خطا در ارسال اطلاعات. اطلاعات به صورت محلی ذخیره شد', 'danger');
+                    console.error("Error:", error);
+                }
+            });
+        });
+
+        // --------------------------
+        // بخش مدیریت تم (پوسته) صفحه
+        // --------------------------
+        const themeToggle = $("#themeToggle");
+        const themeDropdown = $("#themeDropdown");
+
+        themeToggle.click(function (e) {
+            e.stopPropagation();
+            themeDropdown.toggleClass("show");
+        });
+
+        $(document).click(function () {
+            themeDropdown.removeClass("show");
+        });
+
+        $(".theme-dropdown-item").click(function (e) {
+            e.preventDefault();
+            const selectedTheme = $(this).data("theme");
+            applyTheme(selectedTheme);
+            localStorage.setItem("theme", selectedTheme);
+            themeDropdown.removeClass("show");
+        });
+
+        // --------------------------
+        // بخش نمایش پیام‌ها
+        // --------------------------
+        /**
+        * نمایش پیام به کاربر
+        * @param {string} message - متن پیام
+        * @param {string} type - نوع پیام (success/danger/info)
+        */
+        function showAlert(message, type = 'success') {
+            const alertBox = $('#formAlert');
+            alertBox
+            .removeClass('d-none alert-success alert-danger alert-info')
+            .addClass(`alert alert-${type}`)
+            .html(`<i class="ti ti-info-circle me-2"></i> ${message}`);
+
+            setTimeout(() => {
+                alertBox.fadeOut(500, function () {
+                    $(this).addClass('d-none').show().removeClass(`alert-${type}`).html('');
+                });
+            },
+                4000);
+        }
+
+        // --------------------------
+        // مقداردهی اولیه
+        // --------------------------
+        // بارگذاری داده‌های ذخیره شده
+        const savedData = JSON.parse(localStorage.getItem(storageKey));
+        if (savedData) {
+            setFormData(savedData);
+            disableForm();
+        }
+
+        // اعمال تم ذخیره شده یا سیستم
+        const savedTheme = localStorage.getItem("theme") || "system";
+        applyTheme(savedTheme);
+
+        /**
+        * اعمال تم انتخاب شده به صفحه
+        * @param {string} theme - تم انتخابی (light/dark/system)
+        */
+        /**
+        * اعمال تم انتخاب‌شده به صفحه
+        * @param {string} theme - تم انتخابی (light/dark/system)
+        */
+        function applyTheme(theme) {
+            let iconClass = "ti ti-device-laptop"; // آیکون پیش‌فرض
+
+            switch (theme) {
+                case "light":
+                    $("html").attr("data-bs-theme", "light");
+                    iconClass = "ti ti-sun";
+                    break;
+
+                case "dark":
+                    $("html").attr("data-bs-theme", "dark");
+                    iconClass = "ti ti-moon";
+                    break;
+
+                default:
+                    const ua = navigator.userAgent.toLowerCase();
+
+                    if (/tv|smart-tv|webos/.test(ua)) {
+                        iconClass = "ti ti-device-tv";
+                    } else if (/tablet|ipad|playbook/.test(ua)) {
+                        iconClass = "ti ti-tablet";
+                    } else if (/mobi|android|iphone/.test(ua)) {
+                        iconClass = "ti ti-device-mobile";
+                    }
+
+                    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    $("html").attr("data-bs-theme", prefersDark ? "dark": "light");
+                    break;
+            }
+
+            $(".theme-switcher-icon").attr("class", `theme-switcher-icon ${iconClass}`);
+        }
+
+
+        // تشخیص تغییر تم سیستم
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem("theme") === "system") {
+                applyTheme("system");
+            }
+        });
+        const $scrollBtn = $('#scrollBtn');
+        const $scrollIcon = $('.scroll-icon');
+        const $bioSection = $('#bio');
+        const $formSection = $('#form');
+
+        // وضعیت اولیه دکمه
+        let isScrolledToForm = false;
+
+        // بررسی موقعیت اسکرول هنگام بارگذاری صفحه
+        checkScrollPosition();
+
+        // رویداد کلیک برای دکمه
+        $scrollBtn.on('click',
+            function() {
+                if (isScrolledToForm) {
+                    // اسکرول به بخش بیوگرافی
+                    $('html, body').animate({
+                        scrollTop: $bioSection.offset().top
+                    }, 500);
+                } else {
+                    // اسکرول به بخش فرم
+                    $('html, body').animate({
+                        scrollTop: $formSection.offset().top
+                    }, 500);
+                }
+            });
+
+        // رویداد اسکرول صفحه
+        $(window).on('scroll',
+            function() {
+                checkScrollPosition();
+            });
+
+        // تابع بررسی موقعیت اسکرول
+        function checkScrollPosition() {
+            const scrollPosition = $(window).scrollTop();
+            const bioBottom = $bioSection.offset().top + $bioSection.outerHeight();
+            const formTop = $formSection.offset().top;
+            const windowHeight = $(window).height();
+
+            // اگر در بالای صفحه هستیم، دکمه را مخفی کنیم
+            if (scrollPosition < 100) {
+                $scrollBtn.addClass('hidden');
+                return;
+            } else {
+                $scrollBtn.removeClass('hidden');
+            }
+
+            // بررسی اینکه آیا به بخش فرم رسیده‌ایم یا نه
+            if (scrollPosition + windowHeight / 2 > formTop) {
+                // در بخش فرم هستیم
+                isScrolledToForm = true;
+                $scrollIcon.addClass('up');
+            } else if (scrollPosition + windowHeight / 2 < bioBottom) {
+                // در بخش بیوگرافی هستیم
+                isScrolledToForm = false;
+                $scrollIcon.removeClass('up');
+            }
+        }
+    });
+</script>
+</body>
 </html>
