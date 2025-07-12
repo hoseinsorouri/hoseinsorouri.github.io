@@ -7,81 +7,603 @@
     <!-- Tabler CSS -->
     <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet">
     <!-- Tabler Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons@2.47.0/iconfont/tabler-icons.min.css" rel="stylesheet">
-    <!-- Quill CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
+<!-- Quill CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; font-family: Arial, sans-serif; }
-        .container { max-width: 1200px; margin: auto; padding: 20px; }
-        .modal-content { max-height: 80vh; overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: right; }
-        .grid div { padding: 5px; }
-        .grid img { max-width: 200px; display: block; margin: 0 auto; }
-        .notebook-content { background: #fff; padding: 20px; border-radius: 8px; }
-        #editor { border: 1px solid #ddd; min-height: 300px; text-align: right; }
-        .print-controls { margin-top: 10px; text-align: center; }
-        .textarea-add { width: 100%; height: 200px; margin-bottom: 10px; }
-        .page-nav { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .page-nav .page-number { font-weight: bold; }
-        footer { text-align: center; margin-top: 20px; }
-        .table th, .table td { text-align: center; vertical-align: middle; }
-        .nav-tabs { margin-bottom: 20px; }
-        .alert { position: fixed; top: 20px; right: 20px; z-index: 1000; }
-        /* Dark Mode Styles */
-        .dark-mode { background: #222529; color: #ffffff; }
-        .dark-mode .card { background: #2c3034; }
-        .dark-mode .modal-content { background: #2c3034; }
-        .dark-mode .form-control, .dark-mode .form-select { background: #343a40; color: #ffffff; border-color: #444; }
-        .dark-mode .notebook-content { background: #2c3034; }
-        .dark-mode #editor { background: #343a40; color: #ffffff; }
-        .dark-mode .table { background: #2c3034; color: #ffffff; }
-        .dark-mode .btn-outline-secondary { border-color: #444; color: #ffffff; }
-        .dark-mode .btn-outline-secondary:hover { background: #444; }
+        :root {
+            --primary-color: #206bc4;
+            --danger-color: #d63939;
+            --success-color: #2fb344;
+            --warning-color: #f76707;
+            --dark-bg: #1a1c23;
+            --dark-card: #252833;
+            --dark-text: #e9ecef;
+        }
+        
+        body {
+            background: #f8f9fa;
+            font-family: Tahoma, Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #206bc4, #4263eb);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .dark-mode .card {
+            background: var(--dark-card);
+            border-color: #343a40;
+        }
+        
+        .table th {
+            background-color: #f1f3f5;
+            font-weight: 600;
+        }
+        
+        .dark-mode .table th {
+            background-color: #2d3035;
+            color: #e9ecef;
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .dark-mode .table {
+            color: #e9ecef;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #206bc4;
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+            margin: 2px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-mode .stat-card {
+            background: var(--dark-card);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .stat-title {
+            color: #868e96;
+            font-size: 0.9rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .grid-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-mode .grid-item {
+            background: var(--dark-card);
+        }
+        
+        .grid-item img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .dark-mode .modal-content {
+            background: var(--dark-card);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+        }
+        
+        .dark-mode .form-control, 
+        .dark-mode .form-select {
+            background: #2d3035;
+            color: #e9ecef;
+            border-color: #444;
+        }
+        
+        .editor-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 300px;
+        }
+        
+        .dark-mode .editor-container {
+            background: #2d3035;
+        }
+        
+        .ql-toolbar {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .ql-container {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            min-height: 250px;
+        }
+        
+        .page-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .page-number {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .user-photo {
+            max-width: 200px;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: block;
+        }
+        
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            max-width: 400px;
+        }
+        
+        .notebook-btn {
+            background: linear-gradient(135deg, #2fb344, #40c057);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .notebook-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .program-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f3f5;
+        }
+        
+        .dark-mode .program-title {
+            border-bottom-color: #343a40;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Main Container -->
     <div class="container">
-        <!-- Header with Search and Buttons -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="input-icon">
-                    <input type="text" id="searchInput" class="form-control" placeholder="جستجو بر اساس نام یا شماره تلفن...">
-                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+        <!-- Header -->
+        <div class="header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1><i class="ti ti-dumbbell me-2"></i>مدیریت فرم بدنسازی</h1>
+                    <p class="mb-0">سیستم جامع مدیریت کاربران و برنامه‌های تمرینی</p>
+                </div>
+                <div class="col-md-6 text-start">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-light" id="toggleDarkMode">
+                            <i class="ti ti-moon me-1"></i> حالت تاریک
+                        </button>
+                        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addModal">
+                            <i class="ti ti-plus me-1"></i> افزودن کاربر
+                        </button>
+                        
+                        <!-- در بخش مودال افزودن کاربر، تب جدید را اضافه کنید -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن کاربر جدید</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#addByForm">ورود با فرم</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#addByText">ورود با متن</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#addSmart">ورود هوشمند</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content">
+                    <!-- تب فرم (موجود) -->
+                    <div class="tab-pane fade show active" id="addByForm">
+                        <!-- فرم موجود -->
+                    </div>
+                    
+                    <!-- تب متن (موجود) -->
+                    <div class="tab-pane fade" id="addByText">
+                        <!-- متن موجود -->
+                    </div>
+                    
+                    <!-- تب جدید ورود هوشمند -->
+                    <div class="tab-pane fade" id="addSmart">
+                        <div class="alert alert-info mb-3">
+                            <i class="ti ti-info-circle me-2"></i>
+                            اطلاعات کاربر را به صورت ساختاریافته وارد کنید (هر خط شامل یک فیلد و مقدار آن)
+                        </div>
+                        <textarea id="smartInput" class="form-control" rows="20" placeholder="مثال:
+firstName
+رامین
+lastName
+رودباری
+birthDate
+۱۴۰۴/۰۴/۲۰
+phone
+09936537305
+contactMethod
+telegram
+..."></textarea>
+                        <button id="parseSmartBtn" class="btn btn-primary mt-3">
+                            <i class="ti ti-check me-1"></i> پردازش و افزودن
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 text-end">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                    <i class="ti ti-plus me-1"></i> افزودن دستی
-                </button>
-                <button class="btn btn-secondary" id="settingsBtn">
-                    <i class="ti ti-settings me-1"></i> تنظیمات
-                </button>
-                <button class="btn btn-secondary" id="toggleDarkMode">
-                    <i class="ti ti-moon me-1"></i> حالت تاریک
-                </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function parseSmartInput() {
+    const input = document.getElementById('smartInput').value.trim();
+    if (!input) {
+        showAlert('warning', 'لطفاً اطلاعات را وارد کنید');
+        return;
+    }
+
+    const lines = input.split('\n').map(line => line.trim());
+    const data = {};
+    let currentKey = '';
+    
+    // پردازش خط به خط با در نظر گرفتن فیلدهای اختیاری
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        // اگر خط خالی باشد، ادامه می‌دهیم
+        if (!line) continue;
+        
+        // اگر خط فعلی یک کلید شناخته شده است
+        if (isKnownField(line)) {
+            currentKey = line;
+            // مقدار بعدی را به این کلید اختصاص می‌دهیم (اگر وجود داشته باشد)
+            if (i + 1 < lines.length && !isKnownField(lines[i+1])) {
+                data[currentKey] = lines[i+1];
+                i++; // یک خط اضافی جلو می‌رویم
+            } else {
+                data[currentKey] = ''; // مقدار پیش‌فرض خالی
+            }
+        }
+    }
+
+    // اعتبارسنجی فیلدهای ضروری
+    if (!data.firstName || !data.lastName || !data.phone) {
+        showAlert('danger', 'نام، نام خانوادگی و شماره تلفن ضروری هستند');
+        return;
+    }
+
+    // پر کردن خودکار فرم با مقادیر پیش‌فرض برای فیلدهای اختیاری
+    document.getElementById('addFirstName').value = data.firstName || '';
+    document.getElementById('addLastName').value = data.lastName || '';
+    document.getElementById('addBirthDate').value = data.birthDate || '';
+    document.getElementById('addPhone').value = data.phone || '';
+    document.getElementById('addContactMethod').value = data.contactMethod || 'telegram';
+    document.getElementById('addGender').value = data.selectedGender || data.gender || 'male';
+    document.getElementById('addWeight').value = data.weight || '';
+    document.getElementById('addHeight').value = data.height || '';
+    document.getElementById('addThigh').value = data.thigh || '';
+    document.getElementById('addAbdomen').value = data.abdomen || '';
+    document.getElementById('addHip').value = data.hip || '';
+    document.getElementById('addChest').value = data.chest || '';
+    document.getElementById('addArm').value = data.arm || '';
+    document.getElementById('addQ1').value = (data.q1 === 'true') ? 'true' : 'false';
+    document.getElementById('addHeartDetails').value = data.heartDetails || '';
+    document.getElementById('addSupplement1').value = (data.supplement1 === 'true') ? 'true' : 'false';
+    document.getElementById('addOtherSupplement').value = data.otherSupplement || '';
+    document.getElementById('addWantSupplementInfo').value = (data.wantSupplementInfo === 'true') ? 'true' : 'false';
+    document.getElementById('addWantToPurchase').value = (data.wantToPurchase === 'true') ? 'true' : 'false';
+    document.getElementById('addBudget').value = data.budget || '';
+    document.getElementById('addGoal').value = data.goal || '';
+    document.getElementById('addDdoso').value = data.ddoso || data.notes || '';
+    document.getElementById('addTrainingTime').value = data.trainingTime || '';
+    document.getElementById('addTrainingLevel').value = data.trainingLevel || 'beginner';
+
+    // تغییر به تب فرم
+    const tab = new bootstrap.Tab(document.querySelector('#addModal .nav-tabs a[href="#addByForm"]'));
+    tab.show();
+
+    showAlert('success', 'اطلاعات با موفقیت پردازش شد. لطفاً بررسی و ذخیره کنید');
+}
+
+// لیست فیلدهای شناخته شده
+function isKnownField(line) {
+    const knownFields = [
+        'firstName', 'lastName', 'birthDate', 'phone', 'contactMethod',
+        'selectedGender', 'gender', 'weight', 'height', 'thigh', 'abdomen',
+        'hip', 'chest', 'arm', 'q1', 'heartDetails', 'trainingTime',
+        'trainingLevel', 'supplement1', 'otherSupplement', 'wantSupplementInfo',
+        'wantToPurchase', 'budget', 'goal', 'ddoso', 'notes'
+    ];
+    return knownFields.includes(line);
+}
+</script>
+                        
+                        
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-title">کاربران ثبت شده</div>
+                <div class="stat-value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">کاربران مرد</div>
+                <div class="stat-value" id="maleUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">کاربران زن</div>
+                <div class="stat-value" id="femaleUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">برنامه‌های نوشته شده</div>
+                <div class="stat-value" id="programsCount">0</div>
+            </div>
+        </div>
+        
+        <!-- Search and Actions -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-icon">
+                            <input type="text" id="searchInput" class="form-control" placeholder="جستجو بر اساس نام، شماره تلفن یا هدف...">
+                            <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showProgramsOnly">
+                            <label class="form-check-label" for="showProgramsOnly">نمایش کاربران دارای برنامه</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Users Table -->
         <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">لیست کاربران</h3>
+            </div>
             <div class="table-responsive">
-                <table class="table table-vcenter">
+                <table class="table table-vcenter table-hover">
                     <thead>
                         <tr>
-                            <th>ردیف</th>
-                            <th>نام کامل</th>
+                            <th>#</th>
+                            <th>کاربر</th>
                             <th>شماره تلفن</th>
                             <th>متد تماس</th>
-                            <th>تاریخ و ساعت درخواست</th>
+                            <th>هدف</th>
+                            <th>برنامه</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody"></tbody>
+                    <tbody id="tableBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
                 </table>
             </div>
         </div>
-
-        <!-- Modal for Details -->
+        
+        <!-- Modals -->
+        <!-- Add User Modal -->
+        <div class="modal fade" id="addModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">افزودن کاربر جدید</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addForm" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">نام</label>
+                                <input type="text" id="addFirstName" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">نام خانوادگی</label>
+                                <input type="text" id="addLastName" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">تاریخ تولد</label>
+                                <input type="text" id="addBirthDate" class="form-control" placeholder="مثال: ۱۳۷۰/۰۳/۲۳">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">شماره تلفن</label>
+                                <input type="text" id="addPhone" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">متد تماس</label>
+                                <select id="addContactMethod" class="form-select">
+                                    <option value="telegram">تلگرام</option>
+                                    <option value="whatsapp">واتساپ</option>
+                                    <option value="instagram">اینستاگرام</option>
+                                    <option value="phone">تماس تلفنی</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">جنسیت</label>
+                                <select id="addGender" class="form-select">
+                                    <option value="male">مرد</option>
+                                    <option value="female">زن</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="mt-4 mb-3">مشخصات بدنی</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">وزن (کیلوگرم)</label>
+                                <input type="number" id="addWeight" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">قد (سانتی‌متر)</label>
+                                <input type="number" id="addHeight" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">سن</label>
+                                <input type="number" id="addAge" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <h5 class="mt-4 mb-3">اهداف و اطلاعات</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">هدف اصلی</label>
+                                <select id="addGoal" class="form-select">
+                                    <option value="muscleGain">افزایش حجم عضلانی</option>
+                                    <option value="fatLoss">چربی سوزی</option>
+                                    <option value="strength">افزایش قدرت</option>
+                                    <option value="endurance">افزایش استقامت</option>
+                                    <option value="health">سلامت عمومی</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">سطح فعالیت</label>
+                                <select id="addActivityLevel" class="form-select">
+                                    <option value="beginner">تازه کار</option>
+                                    <option value="intermediate">متوسط</option>
+                                    <option value="advanced">پیشرفته</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">توضیحات و اطلاعات اضافی</label>
+                                <textarea id="addNotes" class="form-control" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+                        <button type="button" class="btn btn-primary" id="saveNewUserBtn">ذخیره کاربر</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Details Modal -->
         <div class="modal fade" id="detailsModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -90,14 +612,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="modalContent" class="grid"></div>
-                        <footer>تاریخ درخواست: <span id="requestDate"></span></footer>
+                        <div id="userDetailsContent"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-warning" onclick="editUser(currentUserIndex)">
+                        <button class="btn btn-primary" onclick="openNotebook(currentUserId)">
+                            <i class="ti ti-notebook me-1"></i> برنامه تمرینی
+                        </button>
+                        <button class="btn btn-warning" onclick="editUser(currentUserId)">
                             <i class="ti ti-edit me-1"></i> ویرایش
                         </button>
-                        <button class="btn btn-danger" onclick="deleteUser(currentUserIndex)">
+                        <button class="btn btn-danger" onclick="deleteUser(currentUserId)">
                             <i class="ti ti-trash me-1"></i> حذف
                         </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
@@ -105,854 +629,667 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal for Adding Data -->
-        <div class="modal fade" id="addModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">افزودن دستی اطلاعات</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#addByText">ورود با متن</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#addByForm">ورود با فرم</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <!-- Tab for Textarea -->
-                            <div class="tab-pane fade show active" id="addByText">
-                                <textarea id="addTextarea" class="form-control textarea-add" placeholder="متن را اینجا پیست کنید..."></textarea>
-                                <button id="addDataBtn" class="btn btn-primary mt-2">
-                                    <i class="ti ti-check me-1"></i> افزودن
-                                </button>
-                            </div>
-                            <!-- Tab for Form -->
-                            <div class="tab-pane fade" id="addByForm">
-                                <form id="addForm" class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">نام</label>
-                                        <input type="text" id="addFirstName" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">نام خانوادگی</label>
-                                        <input type="text" id="addLastName" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">تاریخ تولد</label>
-                                        <input type="text" id="addBirthDate" class="form-control" placeholder="مثال: ۱۳۷۰/۰۳/۲۳">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">شماره تلفن</label>
-                                        <input type="text" id="addPhone" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">متد تماس</label>
-                                        <select id="addContactMethod" class="form-select">
-                                            <option value="telegram">تلگرام</option>
-                                            <option value="whatsapp">واتساپ</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">جنسیت</label>
-                                        <select id="addGender" class="form-select">
-                                            <option value="male">مرد</option>
-                                            <option value="female">زن</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">وزن (کیلوگرم)</label>
-                                        <input type="text" id="addWeight" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">قد (سانتی‌متر)</label>
-                                        <input type="text" id="addHeight" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">دور ران (سانتی‌متر)</label>
-                                        <input type="text" id="addThigh" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">دور شکم (سانتی‌متر)</label>
-                                        <input type="text" id="addAbdomen" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">دور باسن (سانتی‌متر)</label>
-                                        <input type="text" id="addHip" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">دور سینه (سانتی‌متر)</label>
-                                        <input type="text" id="addChest" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">دور بازو (سانتی‌متر)</label>
-                                        <input type="text" id="addArm" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">سابقه بیماری</label>
-                                        <select id="addQ1" class="form-select">
-                                            <option value="true">بله</option>
-                                            <option value="false">خیر</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label">جزئیات بیماری</label>
-                                        <textarea id="addHeartDetails" class="form-control"></textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">استفاده از مکمل</label>
-                                        <select id="addSupplement1" class="form-select">
-                                            <option value="true">بله</option>
-                                            <option value="false">خیر</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">نوع مکمل</label>
-                                        <input type="text" id="addOtherSupplement" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">اطلاعات مکمل</label>
-                                        <select id="addWantSupplementInfo" class="form-select">
-                                            <option value="true">بله</option>
-                                            <option value="false">خیر</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">قصد خرید</label>
-                                        <select id="addWantToPurchase" class="form-select">
-                                            <option value="true">بله</option>
-                                            <option value="false">خیر</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">بودجه</label>
-                                        <select id="addBudget" class="form-select">
-                                            <option value="">انتخاب کنید</option>
-                                            <option value="low">کمتر از ۵۰۰ هزار تومان</option>
-                                            <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
-                                            <option value="high">۱ تا ۲ میلیون تومان</option>
-                                            <option value="veryHigh">بیش از ۲ میلیون تومان</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">هدف</label>
-                                        <select id="addGoal" class="form-select">
-                                            <option value="">انتخاب کنید</option>
-                                            <option value="muscleGain">افزایش حجم عضلانی</option>
-                                            <option value="fatLoss">چربی سوزی</option>
-                                            <option value="recovery">ریکاوری بهتر</option>
-                                            <option value="performance">بهبود عملکرد</option>
-                                            <option value="health">سلامت عمومی</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label">توضیحات</label>
-                                        <textarea id="addDdoso" class="form-control"></textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">آدرس عکس تمام‌رخ</label>
-                                        <input type="url" id="addFrontPhoto" class="form-control" placeholder="https://example.com/photo.jpg">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">آدرس عکس نیم‌رخ</label>
-                                        <input type="url" id="addSidePhoto" class="form-control" placeholder="https://example.com/photo.jpg">
-                                    </div>
-                                </form>
-                                <button id="addFormBtn" class="btn btn-primary mt-2">
-                                    <i class="ti ti-check me-1"></i> افزودن
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal for Editing Data -->
+        
+        <!-- Edit User Modal -->
         <div class="modal fade" id="editModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">ویرایش اطلاعات کاربر</h5>
+                        <h5 class="modal-title">ویرایش کاربر</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <form id="editForm" class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">نام</label>
-                                <input type="text" id="editFirstName" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">نام خانوادگی</label>
-                                <input type="text" id="editLastName" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">تاریخ تولد</label>
-                                <input type="text" id="editBirthDate" class="form-control" placeholder="مثال: ۱۳۷۰/۰۳/۲۳">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">شماره تلفن</label>
-                                <input type="text" id="editPhone" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">متد تماس</label>
-                                <select id="editContactMethod" class="form-select">
-                                    <option value="telegram">تلگرام</option>
-                                    <option value="whatsapp">واتساپ</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">جنسیت</label>
-                                <select id="editGender" class="form-select">
-                                    <option value="male">مرد</option>
-                                    <option value="female">زن</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">وزن (کیلوگرم)</label>
-                                <input type="text" id="editWeight" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">قد (سانتی‌متر)</label>
-                                <input type="text" id="editHeight" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">دور ران (سانتی‌متر)</label>
-                                <input type="text" id="editThigh" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">دور شکم (سانتی‌متر)</label>
-                                <input type="text" id="editAbdomen" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">دور باسن (سانتی‌متر)</label>
-                                <input type="text" id="editHip" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">دور سینه (سانتی‌متر)</label>
-                                <input type="text" id="editChest" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">دور بازو (سانتی‌متر)</label>
-                                <input type="text" id="editArm" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">سابقه بیماری</label>
-                                <select id="editQ1" class="form-select">
-                                    <option value="true">بله</option>
-                                    <option value="false">خیر</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">جزئیات بیماری</label>
-                                <textarea id="editHeartDetails" class="form-control"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">استفاده از مکمل</label>
-                                <select id="editSupplement1" class="form-select">
-                                    <option value="true">بله</option>
-                                    <option value="false">خیر</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">نوع مکمل</label>
-                                <input type="text" id="editOtherSupplement" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">اطلاعات مکمل</label>
-                                <select id="editWantSupplementInfo" class="form-select">
-                                    <option value="true">بله</option>
-                                    <option value="false">خیر</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">قصد خرید</label>
-                                <select id="editWantToPurchase" class="form-select">
-                                    <option value="true">بله</option>
-                                    <option value="false">خیر</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">بودجه</label>
-                                <select id="editBudget" class="form-select">
-                                    <option value="">انتخاب کنید</option>
-                                    <option value="low">کمتر از ۵۰۰ هزار تومان</option>
-                                    <option value="medium">۵۰۰ هزار تا ۱ میلیون تومان</option>
-                                    <option value="high">۱ تا ۲ میلیون تومان</option>
-                                    <option value="veryHigh">بیش از ۲ میلیون تومان</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">هدف</label>
-                                <select id="editGoal" class="form-select">
-                                    <option value="">انتخاب کنید</option>
-                                    <option value="muscleGain">افزایش حجم عضلانی</option>
-                                    <option value="fatLoss">چربی سوزی</option>
-                                    <option value="recovery">ریکاوری بهتر</option>
-                                    <option value="performance">بهبود عملکرد</option>
-                                    <option value="health">سلامت عمومی</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">توضیحات</label>
-                                <textarea id="editDdoso" class="form-control"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">آدرس عکس تمام‌رخ</label>
-                                <input type="url" id="editFrontPhoto" class="form-control" placeholder="https://example.com/photo.jpg">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">آدرس عکس نیم‌رخ</label>
-                                <input type="url" id="editSidePhoto" class="form-control" placeholder="https://example.com/photo.jpg">
-                            </div>
+                            <!-- Form fields same as add form -->
                         </form>
-                        <button type="button" class="btn btn-primary mt-2" onclick="saveEditedUser()">
-                            <i class="ti ti-check me-1"></i> ذخیره
-                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+                        <button type="button" class="btn btn-primary" onclick="saveUserChanges()">ذخیره تغییرات</button>
                     </div>
                 </div>
             </div>
         </div>
-
+        
         <!-- Notebook Modal -->
         <div class="modal fade" id="notebookModal" tabindex="-1">
             <div class="modal-dialog modal-xl">
-                <div class="modal-content notebook-content">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">برنامه تمرینی</h5>
+                        <div class="user-info ms-auto">
+                            <span id="programUserName" class="fw-bold"></span>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="editor-toolbar mb-3">
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addHeading(1)">H1</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addHeading(2)">H2</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addHeading(3)">H3</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addText()">متن</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addLink()">لینک</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addTable()">جدول</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addImage()">تصویر</button>
-                            <button class="btn btn-sm btn-primary" onclick="saveProgram()">ذخیره</button>
+                        <div class="program-title">برنامه تمرینی اختصاصی</div>
+                        <div class="editor-container">
+                            <div id="editor"></div>
                         </div>
-                        <div id="editor"></div>
-                        <div class="print-controls mt-3">
-                            <div class="page-nav">
-                                <button class="btn btn-sm btn-outline-secondary" onclick="navigatePage(-1)">
-                                    <i class="ti ti-chevron-right"></i>
-                                </button>
-                                <span class="page-number" id="pageNumber">1</span>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="navigatePage(1)">
-                                    <i class="ti ti-chevron-left"></i>
-                                </button>
+                        <div class="print-controls mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="page-nav">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="changePage(-1)">
+                                        <i class="ti ti-chevron-right"></i> صفحه قبل
+                                    </button>
+                                    <span class="page-number mx-3">صفحه <span id="currentPage">1</span> از <span id="totalPages">1</span></span>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="changePage(1)">
+                                        صفحه بعد <i class="ti ti-chevron-left"></i>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-success me-2" onclick="saveProgram()">
+                                        <i class="ti ti-device-floppy me-1"></i> ذخیره
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="printProgram()">
+                                        <i class="ti ti-printer me-1"></i> چاپ
+                                    </button>
+                                </div>
                             </div>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addPage()">
-                                <i class="ti ti-plus me-1"></i> افزودن صفحه
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deletePage()">
-                                <i class="ti ti-trash me-1"></i> حذف صفحه
-                            </button>
-                            <button class="btn btn-sm btn-primary" onclick="printProgram()">
-                                <i class="ti ti-printer me-1"></i> چاپ
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
     <script>
-        // Initialize Quill
-        if (typeof Quill === 'undefined') {
-            console.error('Quill.js failed to load. Please check the CDN link or internet connection.');
-            showAlert('danger', 'خطا در بارگذاری Quill.js. لطفاً اتصال اینترنت یا لینک CDN را بررسی کنید.');
-        } else {
-            const quill = new Quill('#editor', { theme: 'snow', direction: 'rtl' });
-            let usersData = [];
-            let currentProgramUser = null;
-            let currentUserIndex = null;
-            let pages = [];
-            let currentPage = 0;
-
-            // Default Values
-            const defaultValues = {
-                firstName: '-',
-                lastName: '-',
-                birthDate: '-',
-                phone: '-',
-                contactMethod: '-',
-                gender: '-',
-                weight: '-',
-                height: '-',
-                thigh: '-',
-                abdomen: '-',
-                hip: '-',
-                chest: '-',
-                arm: '-',
-                q1: false,
-                heartDetails: '-',
-                supplement1: false,
-                otherSupplement: '-',
-                wantSupplementInfo: false,
-                wantToPurchase: false,
-                budget: '-',
-                goal: '-',
-                ddoso: '-',
-                frontPhoto: 'https://via.placeholder.com/200',
-                sidePhoto: 'https://via.placeholder.com/200'
-            };
-
-            // Show Alert
-            function showAlert(type, message) {
-                const alert = $(`
-                    <div class="alert alert-${type} alert-dismissible" role="alert">
-                        <div>${message}</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                `);
-                $('body').append(alert);
-                setTimeout(() => alert.alert('close'), 5000);
+        // Initialize Quill editor
+        let quill;
+        try {
+            quill = new Quill('#editor', {
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                },
+                theme: 'snow'
+            });
+        } catch (e) {
+            console.error('Error initializing Quill:', e);
+        }
+        
+        // Application state
+        const state = {
+            users: JSON.parse(localStorage.getItem('fitnessUsers')) || [],
+            currentUser: null,
+            currentProgram: null,
+            currentPage: 1,
+            totalPages: 1,
+            darkMode: localStorage.getItem('darkMode') === 'true'
+        };
+        
+        // DOM Elements
+        const elements = {
+            tableBody: document.getElementById('tableBody'),
+            searchInput: document.getElementById('searchInput'),
+            showProgramsOnly: document.getElementById('showProgramsOnly'),
+            totalUsers: document.getElementById('totalUsers'),
+            maleUsers: document.getElementById('maleUsers'),
+            femaleUsers: document.getElementById('femaleUsers'),
+            programsCount: document.getElementById('programsCount'),
+            userDetailsContent: document.getElementById('userDetailsContent'),
+            programUserName: document.getElementById('programUserName'),
+            currentPage: document.getElementById('currentPage'),
+            totalPages: document.getElementById('totalPages'),
+            addForm: document.getElementById('addForm'),
+            editForm: document.getElementById('editForm')
+        };
+        
+        // Initialize the application
+        function initApp() {
+            // Apply dark mode if enabled
+            if (state.darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggleDarkMode').innerHTML = '<i class="ti ti-sun me-1"></i> حالت روشن';
             }
-
-            // Toggle Dark Mode
-            function toggleDarkMode() {
-                $('body').toggleClass('dark-mode');
-                const isDark = $('body').hasClass('dark-mode');
-                localStorage.setItem('darkMode', isDark);
-                $('#toggleDarkMode').html(isDark ? '<i class="ti ti-sun me-1"></i> حالت روشن' : '<i class="ti ti-moon me-1"></i> حالت تاریک');
+            
+            // Render users table
+            renderUsersTable();
+            
+            // Update stats
+            updateStats();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search functionality
+            elements.searchInput.addEventListener('input', renderUsersTable);
+            
+            // Show only users with programs
+            elements.showProgramsOnly.addEventListener('change', renderUsersTable);
+            
+            // Dark mode toggle
+            document.getElementById('toggleDarkMode').addEventListener('click', toggleDarkMode);
+            
+            // Save new user
+            document.getElementById('saveNewUserBtn').addEventListener('click', saveNewUser);
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', state.darkMode);
+            
+            const btn = document.getElementById('toggleDarkMode');
+            if (state.darkMode) {
+                btn.innerHTML = '<i class="ti ti-sun me-1"></i> حالت روشن';
+            } else {
+                btn.innerHTML = '<i class="ti ti-moon me-1"></i> حالت تاریک';
             }
-
-            // Load Dark Mode
-            function loadDarkMode() {
-                if (localStorage.getItem('darkMode') === 'true') {
-                    $('body').addClass('dark-mode');
-                    $('#toggleDarkMode').html('<i class="ti ti-sun me-1"></i> حالت روشن');
-                }
-            }
-
-            // Load Data
-            function loadData() {
-                try {
-                    usersData = JSON.parse(localStorage.getItem('usersData')) || [];
-                    loadTable();
-                } catch (e) {
-                    console.error('Error loading data:', e);
-                    showAlert('danger', 'خطا در بارگذاری داده‌ها.');
-                    usersData = [];
-                    loadTable();
-                }
-            }
-
-            // Load Table
-            function loadTable(data = usersData) {
-                const $tableBody = $('#tableBody');
-                $tableBody.empty();
-                if (data.length === 0) {
-                    $tableBody.append('<tr><td colspan="6">هیچ کاربری وجود ندارد.</td></tr>');
-                    return;
-                }
-                data.forEach((user, index) => {
-                    $tableBody.append(`
+        }
+        
+        // Render users table
+        function renderUsersTable() {
+            const searchTerm = elements.searchInput.value.toLowerCase();
+            const showOnlyWithPrograms = elements.showProgramsOnly.checked;
+            
+            let filteredUsers = state.users.filter(user => {
+                const matchesSearch = 
+                    user.firstName.toLowerCase().includes(searchTerm) ||
+                    user.lastName.toLowerCase().includes(searchTerm) ||
+                    user.phone.includes(searchTerm) ||
+                    user.goal.toLowerCase().includes(searchTerm);
+                
+                const hasProgram = showOnlyWithPrograms ? user.hasProgram : true;
+                
+                return matchesSearch && hasProgram;
+            });
+            
+            let tableHTML = '';
+            
+            if (filteredUsers.length === 0) {
+                tableHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="ti ti-info-circle me-2"></i>هیچ کاربری یافت نشد
+                        </td>
+                    </tr>
+                `;
+            } else {
+                filteredUsers.forEach((user, index) => {
+                    const fullName = `${user.firstName} ${user.lastName}`;
+                    const initials = user.firstName.charAt(0) + user.lastName.charAt(0);
+                    const hasProgram = user.hasProgram ? '<span class="badge bg-success">دارد</span>' : '<span class="badge bg-secondary">ندارد</span>';
+                    
+                    tableHTML += `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${user.firstName} ${user.lastName}</td>
-                            <td>${user.phone}</td>
-                            <td>${user.contactMethod}</td>
-                            <td>${user.requestDate}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary" onclick="showDetails(${index})">
-                                    <i class="ti ti-info-circle me-1"></i> اطلاعات بیشتر
-                                </button>
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar me-3">${initials}</div>
+                                    <div>
+                                        <div class="fw-bold">${fullName}</div>
+                                        <div class="text-muted small">${user.gender === 'male' ? 'مرد' : 'زن'}, ${user.age || '--'} سال</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${user.phone}</td>
+                            <td>${getContactMethodIcon(user.contactMethod)} ${user.contactMethod}</td>
+                            <td>${getGoalLabel(user.goal)}</td>
+                            <td>${hasProgram}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-primary btn-action" onclick="showUserDetails('${user.id}')">
+                                        <i class="ti ti-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning btn-action" onclick="editUser('${user.id}')">
+                                        <i class="ti ti-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger btn-action" onclick="deleteUser('${user.id}')">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
-                    `);
-                });
-                localStorage.setItem('usersData', JSON.stringify(usersData));
-            }
-
-            // Search Functionality
-            function searchUsers() {
-                $('#searchInput').on('input', function() {
-                    const query = $(this).val().toLowerCase();
-                    const filteredData = usersData.filter(user =>
-                        `${user.firstName} ${user.lastName}`.toLowerCase().includes(query) ||
-                        user.phone.includes(query)
-                    );
-                    loadTable(filteredData);
+                    `;
                 });
             }
-
-            // Add Data from Textarea
-            function addDataFromTextarea() {
-                $('#addDataBtn').click(function() {
-                    try {
-                        const text = $('#addTextarea').val();
-                        const lines = text.trim().split('\n');
-                        const newUser = { ...defaultValues, requestDate: new Date().toLocaleString('fa-IR') };
-                        for (let i = 0; i < lines.length; i += 2) {
-                            const key = lines[i].trim();
-                            const value = lines[i + 1] ? lines[i + 1].trim() : '';
-                            if (key in defaultValues) {
-                                if (key === 'q1' || key === 'supplement1' || key === 'wantSupplementInfo' || key === 'wantToPurchase') {
-                                    newUser[key] = value.toLowerCase() === 'true';
-                                } else {
-                                    newUser[key] = value || defaultValues[key];
-                                }
-                            }
-                        }
-                        usersData.push(newUser);
-                        localStorage.setItem('usersData', JSON.stringify(usersData));
-                        loadTable();
-                        $('#addModal').modal('hide');
-                        $('#addTextarea').val('');
-                        showAlert('success', 'کاربر با موفقیت اضافه شد.');
-                    } catch (e) {
-                        showAlert('danger', 'خطا در افزودن داده‌ها. لطفاً فرمت متن را بررسی کنید.');
-                        console.error('Error adding data:', e);
-                    }
-                });
-            }
-
-            // Add Data from Form
-            function addDataFromForm() {
-                $('#addFormBtn').click(function() {
-                    try {
-                        const newUser = {
-                            firstName: $('#addFirstName').val() || defaultValues.firstName,
-                            lastName: $('#addLastName').val() || defaultValues.lastName,
-                            birthDate: $('#addBirthDate').val() || defaultValues.birthDate,
-                            phone: $('#addPhone').val() || defaultValues.phone,
-                            contactMethod: $('#addContactMethod').val() || defaultValues.contactMethod,
-                            gender: $('#addGender').val() || defaultValues.gender,
-                            weight: $('#addWeight').val() || defaultValues.weight,
-                            height: $('#addHeight').val() || defaultValues.height,
-                            thigh: $('#addThigh').val() || defaultValues.thigh,
-                            abdomen: $('#addAbdomen').val() || defaultValues.abdomen,
-                            hip: $('#addHip').val() || defaultValues.hip,
-                            chest: $('#addChest').val() || defaultValues.chest,
-                            arm: $('#addArm').val() || defaultValues.arm,
-                            q1: $('#addQ1').val() === 'true',
-                            heartDetails: $('#addHeartDetails').val() || defaultValues.heartDetails,
-                            supplement1: $('#addSupplement1').val() === 'true',
-                            otherSupplement: $('#addOtherSupplement').val() || defaultValues.otherSupplement,
-                            wantSupplementInfo: $('#addWantSupplementInfo').val() === 'true',
-                            wantToPurchase: $('#addWantToPurchase').val() === 'true',
-                            budget: $('#addBudget').val() || defaultValues.budget,
-                            goal: $('#addGoal').val() || defaultValues.goal,
-                            ddoso: $('#addDdoso').val() || defaultValues.ddoso,
-                            frontPhoto: $('#addFrontPhoto').val() || defaultValues.frontPhoto,
-                            sidePhoto: $('#addSidePhoto').val() || defaultValues.sidePhoto,
-                            requestDate: new Date().toLocaleString('fa-IR')
-                        };
-                        usersData.push(newUser);
-                        localStorage.setItem('usersData', JSON.stringify(usersData));
-                        loadTable();
-                        $('#addModal').modal('hide');
-                        $('#addForm')[0].reset();
-                        showAlert('success', 'کاربر با موفقیت اضافه شد.');
-                    } catch (e) {
-                        showAlert('danger', 'خطا در افزودن کاربر.');
-                        console.error('Error adding user from form:', e);
-                    }
-                });
-            }
-
-            // Show Details
-            function showDetails(index) {
-                currentUserIndex = index;
-                const user = usersData[index];
-                const $modalContent = $('#modalContent');
-                $modalContent.html(`
-                    <div><b>نام:</b> ${user.firstName}</div>
-                    <div><b>نام خانوادگی:</b> ${user.lastName}</div>
-                    <div><b>تاریخ تولد:</b> ${user.birthDate}</div>
-                    <div><b>شماره تلفن:</b> ${user.phone}</div>
-                    <div><b>متد تماس:</b> ${user.contactMethod}</div>
-                    <div><b>جنسیت:</b> ${user.gender === 'male' ? 'مرد' : user.gender === 'female' ? 'زن' : '-'}</div>
-                    <div><b>وزن:</b> ${user.weight} کیلوگرم</div>
-                    <div><b>قد:</b> ${user.height} سانتی‌متر</div>
-                    <div><b>دور ران:</b> ${user.thigh} سانتی‌متر</div>
-                    <div><b>دور شکم:</b> ${user.abdomen} سانتی‌متر</div>
-                    <div><b>دور باسن:</b> ${user.hip} سانتی‌متر</div>
-                    <div><b>دور سینه:</b> ${user.chest} سانتی‌متر</div>
-                    <div><b>دور بازو:</b> ${user.arm} سانتی‌متر</div>
-                    <div><b>سابقه بیماری:</b> ${user.q1 ? 'بله' : 'خیر'}</div>
-                    <div><b>جزئیات بیماری:</b> ${user.heartDetails}</div>
-                    <div><b>استفاده از مکمل:</b> ${user.supplement1 ? 'بله' : 'خیر'}</div>
-                    <div><b>نوع مکمل:</b> ${user.otherSupplement}</div>
-                    <div><b>اطلاعات مکمل:</b> ${user.wantSupplementInfo ? 'بله' : 'خیر'}</div>
-                    <div><b>قصد خرید:</b> ${user.wantToPurchase ? 'بله' : 'خیر'}</div>
-                    <div><b>بودجه:</b> ${user.budget || '-'}</div>
-                    <div><b>هدف:</b> ${user.goal || '-'}</div>
-                    <div><b>توضیحات:</b> ${user.ddoso}</div>
-                    <div><b>عکس تمام‌رخ:</b> <img src="${user.frontPhoto || defaultValues.frontPhoto}" alt="عکس تمام‌رخ"></div>
-                    <div><b>عکس نیم‌رخ:</b> <img src="${user.sidePhoto || defaultValues.sidePhoto}" alt="عکس نیم‌رخ"></div>
-                    <div>
-                        <button class="btn btn-primary" onclick="openNotebook(${index})">
-                            <i class="ti ti-notebook me-1"></i> نوشتن برنامه تمرینی
-                        </button>
-                    </div>
-                `);
-                $('#requestDate').text(user.requestDate);
-                $('#detailsModal').modal('show');
-            }
-
-            // Edit User
-            function editUser(index) {
-                currentUserIndex = index;
-                const user = usersData[index];
-                $('#editFirstName').val(user.firstName === '-' ? '' : user.firstName);
-                $('#editLastName').val(user.lastName === '-' ? '' : user.lastName);
-                $('#editBirthDate').val(user.birthDate === '-' ? '' : user.birthDate);
-                $('#editPhone').val(user.phone === '-' ? '' : user.phone);
-                $('#editContactMethod').val(user.contactMethod === '-' ? '' : user.contactMethod);
-                $('#editGender').val(user.gender === '-' ? '' : user.gender);
-                $('#editWeight').val(user.weight === '-' ? '' : user.weight);
-                $('#editHeight').val(user.height === '-' ? '' : user.height);
-                $('#editThigh').val(user.thigh === '-' ? '' : user.thigh);
-                $('#editAbdomen').val(user.abdomen === '-' ? '' : user.abdomen);
-                $('#editHip').val(user.hip === '-' ? '' : user.hip);
-                $('#editChest').val(user.chest === '-' ? '' : user.chest);
-                $('#editArm').val(user.arm === '-' ? '' : user.arm);
-                $('#editQ1').val(user.q1.toString());
-                $('#editHeartDetails').val(user.heartDetails === '-' ? '' : user.heartDetails);
-                $('#editSupplement1').val(user.supplement1.toString());
-                $('#editOtherSupplement').val(user.otherSupplement === '-' ? '' : user.otherSupplement);
-                $('#editWantSupplementInfo').val(user.wantSupplementInfo.toString());
-                $('#editWantToPurchase').val(user.wantToPurchase.toString());
-                $('#editBudget').val(user.budget === '-' ? '' : user.budget);
-                $('#editGoal').val(user.goal === '-' ? '' : user.goal);
-                $('#editDdoso').val(user.ddoso === '-' ? '' : user.ddoso);
-                $('#editFrontPhoto').val(user.frontPhoto === defaultValues.frontPhoto ? '' : user.frontPhoto);
-                $('#editSidePhoto').val(user.sidePhoto === defaultValues.sidePhoto ? '' : user.sidePhoto);
-                $('#detailsModal').modal('hide');
-                $('#editModal').modal('show');
-            }
-
-            // Save Edited User
-            function saveEditedUser() {
-                try {
-                    const user = usersData[currentUserIndex];
-                    user.firstName = $('#editFirstName').val() || defaultValues.firstName;
-                    user.lastName = $('#editLastName').val() || defaultValues.lastName;
-                    user.birthDate = $('#editBirthDate').val() || defaultValues.birthDate;
-                    user.phone = $('#editPhone').val() || defaultValues.phone;
-                    user.contactMethod = $('#editContactMethod').val() || defaultValues.contactMethod;
-                    user.gender = $('#editGender').val() || defaultValues.gender;
-                    user.weight = $('#editWeight').val() || defaultValues.weight;
-                    user.height = $('#editHeight').val() || defaultValues.height;
-                    user.thigh = $('#editThigh').val() || defaultValues.thigh;
-                    user.abdomen = $('#editAbdomen').val() || defaultValues.abdomen;
-                    user.hip = $('#editHip').val() || defaultValues.hip;
-                    user.chest = $('#editChest').val() || defaultValues.chest;
-                    user.arm = $('#editArm').val() || defaultValues.arm;
-                    user.q1 = $('#editQ1').val() === 'true';
-                    user.heartDetails = $('#editHeartDetails').val() || defaultValues.heartDetails;
-                    user.supplement1 = $('#editSupplement1').val() === 'true';
-                    user.otherSupplement = $('#editOtherSupplement').val() || defaultValues.otherSupplement;
-                    user.wantSupplementInfo = $('#editWantSupplementInfo').val() === 'true';
-                    user.wantToPurchase = $('#editWantToPurchase').val() === 'true';
-                    user.budget = $('#editBudget').val() || defaultValues.budget;
-                    user.goal = $('#editGoal').val() || defaultValues.goal;
-                    user.ddoso = $('#editDdoso').val() || defaultValues.ddoso;
-                    user.frontPhoto = $('#editFrontPhoto').val() || defaultValues.frontPhoto;
-                    user.sidePhoto = $('#editSidePhoto').val() || defaultValues.sidePhoto;
-                    localStorage.setItem('usersData', JSON.stringify(usersData));
-                    loadTable();
-                    $('#editModal').modal('hide');
-                    showDetails(currentUserIndex);
-                    showAlert('success', 'کاربر با موفقیت ویرایش شد.');
-                } catch (e) {
-                    showAlert('danger', 'خطا در ذخیره تغییرات.');
-                    console.error('Error saving edited user:', e);
-                }
-            }
-
-            // Delete User
-            function deleteUser(index) {
-                if (confirm('آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟')) {
-                    try {
-                        usersData.splice(index, 1);
-                        localStorage.setItem('usersData', JSON.stringify(usersData));
-                        localStorage.removeItem(`program_${index}`);
-                        loadTable();
-                        $('#detailsModal').modal('hide');
-                        showAlert('success', 'کاربر با موفقیت حذف شد.');
-                    } catch (e) {
-                        showAlert('danger', 'خطا در حذف کاربر.');
-                        console.error('Error deleting user:', e);
-                    }
-                }
-            }
-
-            // Open Notebook
-            function openNotebook(index) {
-                try {
-                    currentProgramUser = index;
-                    pages = JSON.parse(localStorage.getItem(`program_${index}`)) || [new Quill.Delta()];
-                    currentPage = 0;
-                    quill.setContents(pages[currentPage] || '');
-                    $('#pageNumber').text(currentPage + 1);
-                    $('#notebookModal').modal('show');
-                } catch (e) {
-                    showAlert('danger', 'خطا در باز کردن نوت‌بوک.');
-                    console.error('Error opening notebook:', e);
-                }
-            }
-
-            // Add Heading
-            function addHeading(level) {
-                quill.format('header', level);
-            }
-
-            // Add Text
-            function addText() {
-                quill.insertText(quill.getSelection()?.index || 0, 'متن نمونه');
-            }
-
-            // Add Link
-            function addLink() {
-                const url = prompt('لینک را وارد کنید:');
-                if (url) quill.insertText(quill.getSelection()?.index || 0, url, { link: url });
-            }
-
-            // Add Table
-            function addTable() {
-                const rows = prompt('تعداد ردیف‌ها را وارد کنید:', '2');
-                const cols = prompt('تعداد ستون‌ها را وارد کنید:', '2');
-                if (rows && cols && !isNaN(rows) && !isNaN(cols)) {
-                    let html = '<table border="1"><tr>';
-                    for (let i = 0; i < cols; i++) html += '<th>عنوان</th>';
-                    html += '</tr>';
-                    for (let i = 0; i < rows - 1; i++) {
-                        html += '<tr>';
-                        for (let j = 0; j < cols; j++) html += '<td>توضیح</td>';
-                        html += '</tr>';
-                    }
-                    html += '</table>';
-                    quill.clipboard.dangerouslyPasteHTML(quill.getSelection()?.index || 0, html);
-                } else {
-                    showAlert('warning', 'لطفاً تعداد معتبر برای ردیف و ستون وارد کنید.');
-                }
-            }
-
-            // Add Image
-            function addImage() {
-                const url = prompt('آدرس تصویر را وارد کنید:');
-                if (url) quill.insertEmbed(quill.getSelection()?.index || 0, 'image', url);
-            }
-
-            // Save Program
-            function saveProgram() {
-                try {
-                    pages[currentPage] = quill.getContents();
-                    localStorage.setItem(`program_${currentProgramUser}`, JSON.stringify(pages));
-                    showAlert('success', 'برنامه با موفقیت ذخیره شد.');
-                } catch (e) {
-                    showAlert('danger', 'خطا در ذخیره برنامه.');
-                    console.error('Error saving program:', e);
-                }
-            }
-
-            // Navigate Page
-            function navigatePage(direction) {
-                try {
-                    pages[currentPage] = quill.getContents();
-                    currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + direction));
-                    quill.setContents(pages[currentPage] || '');
-                    $('#pageNumber').text(currentPage + 1);
-                } catch (e) {
-                    showAlert('danger', 'خطا در جابجایی صفحه.');
-                    console.error('Error navigating page:', e);
-                }
-            }
-
-            // Add Page
-            function addPage() {
-                try {
-                    pages[currentPage] = quill.getContents();
-                    pages.push(new Quill.Delta());
-                    currentPage = pages.length - 1;
-                    quill.setContents(pages[currentPage]);
-                    $('#pageNumber').text(currentPage + 1);
-                    showAlert('success', 'صفحه جدید اضافه شد.');
-                } catch (e) {
-                    showAlert('danger', 'خطا در افزودن صفحه.');
-                    console.error('Error adding page:', e);
-                }
-            }
-
-            // Delete Page
-            function deletePage() {
-                if (pages.length <= 1) {
-                    showAlert('warning', 'نمی‌توانید تنها صفحه را حذف کنید!');
-                    return;
-                }
-                if (confirm('آیا مطمئن هستید که می‌خواهید این صفحه را حذف کنید؟')) {
-                    try {
-                        pages.splice(currentPage, 1);
-                        currentPage = Math.min(currentPage, pages.length - 1);
-                        quill.setContents(pages[currentPage] || '');
-                        $('#pageNumber').text(currentPage + 1);
-                        localStorage.setItem(`program_${currentProgramUser}`, JSON.stringify(pages));
-                        showAlert('success', 'صفحه با موفقیت حذف شد.');
-                    } catch (e) {
-                        showAlert('danger', 'خطا در حذف صفحه.');
-                        console.error('Error deleting page:', e);
-                    }
-                }
-            }
-
-            // Print Program
-            function printProgram() {
-                try {
-                    const printAll = confirm('آیا تمام صفحات پرینت شود؟');
-                    let content = '';
-                    if (printAll) {
-                        pages.forEach(page => {
-                            content += `<div class="page">${quill.root.innerHTML}</div>`;
-                        });
-                    } else {
-                        content = quill.root.innerHTML;
-                    }
-                    const printWindow = window.open('', '_blank');
-                    printWindow.document.write(`
-                        <html><head><style>body { font-family: Arial, sans-serif; text-align: right; } .page { page-break-after: always; }</style></head><body>${content}</body></html>
-                    `);
-                    printWindow.document.close();
-                    printWindow.print();
-                    showAlert('success', 'برنامه آماده چاپ است.');
-                } catch (e) {
-                    showAlert('danger', 'خطا در چاپ برنامه.');
-                    console.error('Error printing program:', e);
-                }
-            }
-
-            // Settings
-            function settings() {
-                $('#settingsBtn').click(function() {
-                    showAlert('info', 'تنظیمات هنوز پیاده‌سازی نشده است.');
-                });
-            }
-
-            // Initialize
-            $(document).ready(function() {
-                loadData();
-                loadDarkMode();
-                searchUsers();
-                addDataFromTextarea();
-                addDataFromForm();
-                settings();
-                $('#toggleDarkMode').click(toggleDarkMode);
-            });
+            
+            elements.tableBody.innerHTML = tableHTML;
         }
+        
+        // Get contact method icon
+        function getContactMethodIcon(method) {
+            switch(method) {
+                case 'telegram': return '<i class="ti ti-brand-telegram text-info"></i>';
+                case 'whatsapp': return '<i class="ti ti-brand-whatsapp text-success"></i>';
+                case 'instagram': return '<i class="ti ti-brand-instagram text-danger"></i>';
+                default: return '<i class="ti ti-phone"></i>';
+            }
+        }
+        
+        // Get goal label
+        function getGoalLabel(goal) {
+            const goals = {
+                'muscleGain': 'افزایش حجم عضلانی',
+                'fatLoss': 'چربی سوزی',
+                'strength': 'افزایش قدرت',
+                'endurance': 'افزایش استقامت',
+                'health': 'سلامت عمومی'
+            };
+            return goals[goal] || goal;
+        }
+        
+        // Update statistics
+        function updateStats() {
+            elements.totalUsers.textContent = state.users.length;
+            
+            const maleUsers = state.users.filter(u => u.gender === 'male').length;
+            const femaleUsers = state.users.filter(u => u.gender === 'female').length;
+            const programsCount = state.users.filter(u => u.hasProgram).length;
+            
+            elements.maleUsers.textContent = maleUsers;
+            elements.femaleUsers.textContent = femaleUsers;
+            elements.programsCount.textContent = programsCount;
+        }
+        
+        // Save new user
+        function saveNewUser() {
+            const firstName = document.getElementById('addFirstName').value.trim();
+            const lastName = document.getElementById('addLastName').value.trim();
+            const phone = document.getElementById('addPhone').value.trim();
+            
+            if (!firstName || !lastName || !phone) {
+                showAlert('warning', 'لطفاً نام، نام خانوادگی و شماره تلفن را وارد کنید');
+                return;
+            }
+            
+            // Check if phone already exists
+            if (state.users.some(user => user.phone === phone)) {
+                showAlert('warning', 'شماره تلفن تکراری است');
+                return;
+            }
+            
+            const newUser = {
+                id: generateId(),
+                firstName,
+                lastName,
+                phone,
+                birthDate: document.getElementById('addBirthDate').value.trim(),
+                contactMethod: document.getElementById('addContactMethod').value,
+                gender: document.getElementById('addGender').value,
+                weight: document.getElementById('addWeight').value,
+                height: document.getElementById('addHeight').value,
+                age: document.getElementById('addAge').value,
+                goal: document.getElementById('addGoal').value,
+                activityLevel: document.getElementById('addActivityLevel').value,
+                notes: document.getElementById('addNotes').value,
+                hasProgram: false,
+                program: '',
+                createdAt: new Date().toLocaleString('fa-IR')
+            };
+            
+            state.users.push(newUser);
+            saveToLocalStorage();
+            renderUsersTable();
+            updateStats();
+            
+            // Close modal and reset form
+            document.getElementById('addForm').reset();
+            bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
+            
+            showAlert('success', 'کاربر جدید با موفقیت اضافه شد');
+        }
+        
+        // Show user details
+        function showUserDetails(userId) {
+            const user = state.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            state.currentUser = user;
+            currentUserId = userId;
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4 mb-md-0">
+                        <div class="user-avatar" style="width: 100px; height: 100px; font-size: 2rem;">
+                            ${user.firstName.charAt(0)}${user.lastName.charAt(0)}
+                        </div>
+                        <h4 class="mt-3">${user.firstName} ${user.lastName}</h4>
+                        <div class="text-muted">${user.gender === 'male' ? 'مرد' : 'زن'}, ${user.age || '--'} سال</div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">شماره تلفن</label>
+                                <div class="form-control-plaintext">${user.phone}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">روش ارتباط</label>
+                                <div class="form-control-plaintext">${user.contactMethod}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">تاریخ تولد</label>
+                                <div class="form-control-plaintext">${user.birthDate || '--'}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">هدف اصلی</label>
+                                <div class="form-control-plaintext">${getGoalLabel(user.goal)}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">قد</label>
+                                <div class="form-control-plaintext">${user.height ? user.height + ' سانتی‌متر' : '--'}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">وزن</label>
+                                <div class="form-control-plaintext">${user.weight ? user.weight + ' کیلوگرم' : '--'}</div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">توضیحات</label>
+                                <div class="form-control-plaintext">${user.notes || '--'}</div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">تاریخ ثبت نام</label>
+                                <div class="form-control-plaintext">${user.createdAt}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            elements.userDetailsContent.innerHTML = detailsHTML;
+            
+            // Show modal
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        // Edit user
+        function editUser(userId) {
+            const user = state.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            state.currentUser = user;
+            
+            // Populate edit form
+            document.getElementById('editForm').innerHTML = `
+                <div class="col-md-6">
+                    <label class="form-label">نام</label>
+                    <input type="text" id="editFirstName" class="form-control" value="${user.firstName}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">نام خانوادگی</label>
+                    <input type="text" id="editLastName" class="form-control" value="${user.lastName}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">تاریخ تولد</label>
+                    <input type="text" id="editBirthDate" class="form-control" value="${user.birthDate || ''}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">شماره تلفن</label>
+                    <input type="text" id="editPhone" class="form-control" value="${user.phone}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">متد تماس</label>
+                    <select id="editContactMethod" class="form-select">
+                        <option value="telegram" ${user.contactMethod === 'telegram' ? 'selected' : ''}>تلگرام</option>
+                        <option value="whatsapp" ${user.contactMethod === 'whatsapp' ? 'selected' : ''}>واتساپ</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">جنسیت</label>
+                    <select id="editGender" class="form-select">
+                        <option value="male" ${user.gender === 'male' ? 'selected' : ''}>مرد</option>
+                        <option value="female" ${user.gender === 'female' ? 'selected' : ''}>زن</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">وزن (کیلوگرم)</label>
+                    <input type="number" id="editWeight" class="form-control" value="${user.weight || ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">قد (سانتی‌متر)</label>
+                    <input type="number" id="editHeight" class="form-control" value="${user.height || ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">سن</label>
+                    <input type="number" id="editAge" class="form-control" value="${user.age || ''}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">هدف اصلی</label>
+                    <select id="editGoal" class="form-select">
+                        <option value="muscleGain" ${user.goal === 'muscleGain' ? 'selected' : ''}>افزایش حجم عضلانی</option>
+                        <option value="fatLoss" ${user.goal === 'fatLoss' ? 'selected' : ''}>چربی سوزی</option>
+                        <option value="strength" ${user.goal === 'strength' ? 'selected' : ''}>افزایش قدرت</option>
+                        <option value="endurance" ${user.goal === 'endurance' ? 'selected' : ''}>افزایش استقامت</option>
+                        <option value="health" ${user.goal === 'health' ? 'selected' : ''}>سلامت عمومی</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">سطح فعالیت</label>
+                    <select id="editActivityLevel" class="form-select">
+                        <option value="beginner" ${user.activityLevel === 'beginner' ? 'selected' : ''}>تازه کار</option>
+                        <option value="intermediate" ${user.activityLevel === 'intermediate' ? 'selected' : ''}>متوسط</option>
+                        <option value="advanced" ${user.activityLevel === 'advanced' ? 'selected' : ''}>پیشرفته</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">توضیحات و اطلاعات اضافی</label>
+                    <textarea id="editNotes" class="form-control" rows="3">${user.notes || ''}</textarea>
+                </div>
+            `;
+            
+            // Show modal
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        }
+        
+        // Save user changes
+        function saveUserChanges() {
+            if (!state.currentUser) return;
+            
+            const userIndex = state.users.findIndex(u => u.id === state.currentUser.id);
+            if (userIndex === -1) return;
+            
+            // Update user data
+            state.users[userIndex] = {
+                ...state.users[userIndex],
+                firstName: document.getElementById('editFirstName').value.trim(),
+                lastName: document.getElementById('editLastName').value.trim(),
+                birthDate: document.getElementById('editBirthDate').value.trim(),
+                phone: document.getElementById('editPhone').value.trim(),
+                contactMethod: document.getElementById('editContactMethod').value,
+                gender: document.getElementById('editGender').value,
+                weight: document.getElementById('editWeight').value,
+                height: document.getElementById('editHeight').value,
+                age: document.getElementById('editAge').value,
+                goal: document.getElementById('editGoal').value,
+                activityLevel: document.getElementById('editActivityLevel').value,
+                notes: document.getElementById('editNotes').value
+            };
+            
+            saveToLocalStorage();
+            renderUsersTable();
+            
+            // Close modal
+            bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+            
+            showAlert('success', 'تغییرات با موفقیت ذخیره شد');
+        }
+        
+        // Delete user
+        function deleteUser(userId) {
+            if (!confirm('آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟')) return;
+            
+            const userIndex = state.users.findIndex(u => u.id === userId);
+            if (userIndex === -1) return;
+            
+            state.users.splice(userIndex, 1);
+            saveToLocalStorage();
+            renderUsersTable();
+            updateStats();
+            
+            // Close modals if open
+            bootstrap.Modal.getInstance(document.getElementById('detailsModal'))?.hide();
+            
+            showAlert('success', 'کاربر با موفقیت حذف شد');
+        }
+        
+        // Open notebook for user
+        function openNotebook(userId) {
+            const user = state.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            state.currentUser = user;
+            elements.programUserName.textContent = `برنامه تمرینی ${user.firstName} ${user.lastName}`;
+            
+            // Load program content
+            if (quill) {
+                try {
+                    if (user.program) {
+                        quill.setContents(JSON.parse(user.program));
+                    } else {
+                        quill.setText('برنامه تمرینی خود را اینجا بنویسید...');
+                    }
+                } catch (e) {
+                    console.error('Error loading program content:', e);
+                    quill.setText('خطا در بارگذاری برنامه. لطفاً دوباره تلاش کنید.');
+                }
+            }
+            
+            // Show modal
+            const notebookModal = new bootstrap.Modal(document.getElementById('notebookModal'));
+            notebookModal.show();
+        }
+        
+        // Save program
+        function saveProgram() {
+            if (!state.currentUser || !quill) return;
+            
+            const userIndex = state.users.findIndex(u => u.id === state.currentUser.id);
+            if (userIndex === -1) return;
+            
+            try {
+                const programContent = JSON.stringify(quill.getContents());
+                state.users[userIndex].program = programContent;
+                state.users[userIndex].hasProgram = true;
+                
+                saveToLocalStorage();
+                renderUsersTable();
+                updateStats();
+                
+                showAlert('success', 'برنامه تمرینی با موفقیت ذخیره شد');
+            } catch (e) {
+                console.error('Error saving program:', e);
+                showAlert('danger', 'خطا در ذخیره برنامه');
+            }
+        }
+        
+        // Print program
+        function printProgram() {
+            if (!quill) return;
+            
+            const programContent = quill.root.innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>برنامه تمرینی</title>
+                    <style>
+                        body { font-family: Tahoma, Arial, sans-serif; padding: 20px; }
+                        .print-header { text-align: center; margin-bottom: 30px; }
+                        .print-title { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+                        .print-subtitle { font-size: 18px; color: #555; margin-bottom: 20px; }
+                        .program-content { line-height: 1.8; }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-header">
+                        <div class="print-title">برنامه تمرینی اختصاصی</div>
+                        <div class="print-subtitle">${state.currentUser ? state.currentUser.firstName + ' ' + state.currentUser.lastName : ''}</div>
+                        <div class="print-date">تاریخ: ${new Date().toLocaleDateString('fa-IR')}</div>
+                    </div>
+                    <div class="program-content">${programContent}</div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // Change page (for multi-page programs - not implemented in this version)
+        function changePage(direction) {
+            state.currentPage = Math.max(1, Math.min(state.totalPages, state.currentPage + direction));
+            elements.currentPage.textContent = state.currentPage;
+            // In a real implementation, you would load the content for the current page
+        }
+        
+        // Helper functions
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        function saveToLocalStorage() {
+            localStorage.setItem('fitnessUsers', JSON.stringify(state.users));
+        }
+        
+        function showAlert(type, message) {
+            const alertTypes = {
+                'success': 'success',
+                'warning': 'warning',
+                'danger': 'danger',
+                'info': 'info'
+            };
+            
+            const iconTypes = {
+                'success': 'ti-circle-check',
+                'warning': 'ti-alert-triangle',
+                'danger': 'ti-alert-circle',
+                'info': 'ti-info-circle'
+            };
+            
+            if (!alertTypes[type]) type = 'info';
+            
+            const alertHTML = `
+                <div class="alert alert-${alertTypes[type]} alert-dismissible fade show" role="alert">
+                    <div class="d-flex">
+                        <div>
+                            <i class="ti ${iconTypes[type]} me-2"></i>
+                        </div>
+                        <div>
+                            ${message}
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = alertHTML;
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 150);
+                }
+            }, 5000);
+        }
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Global variables for modal functions
+        let currentUserId = null;
     </script>
 </body>
 </html>
